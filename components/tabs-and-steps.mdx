@@ -1,0 +1,141 @@
+---
+title: "Tabs, Steps, and Accordion Components"
+sidebarTitle: "Tabs & Steps"
+description: "Use Mintlify's Tabs, Steps, and Accordion components to present alternative content, sequential instructions, and collapsible FAQ sections."
+---
+
+Use `<Tabs>` for alternative content views such as different languages or operating systems, `<Steps>` for sequential how-to instructions where order matters, and `<Accordion>` for collapsible FAQ entries or optional detail that would otherwise clutter the page. These three components cover the majority of structured content patterns in technical documentation.
+
+## `<Tabs>` and `<Tab>`
+
+Wrap individual `<Tab>` components inside a `<Tabs>` container. Each `<Tab>` requires a `title` prop that becomes the clickable label. The example below shows OS-specific install instructions using three tabs:
+
+<Tabs>
+  <Tab title="macOS">
+    Install the Mintlify CLI using Homebrew:
+
+    ```bash
+    brew install mintlify
+    ```
+
+    Then verify the installation:
+
+    ```bash
+    mintlify --version
+    ```
+  </Tab>
+  <Tab title="Windows">
+    Install the Mintlify CLI globally via npm:
+
+    ```bash
+    npm install -g mintlify
+    ```
+  </Tab>
+  <Tab title="Linux">
+    Install the Mintlify CLI using npm:
+
+    ```bash
+    npm install -g mintlify
+    ```
+
+    If you don't have Node.js installed, use your distribution's package manager first:
+
+    ```bash
+    sudo apt install nodejs npm
+    ```
+  </Tab>
+</Tabs>
+
+Each `<Tab>` can contain any Mintlify MDX content — prose, code blocks, callouts, images, or nested components.
+
+<Tip>
+  `<Tabs>` are great for OS-specific or language-specific instructions. When two tabs on the same page share the same label (for example, both use `"Python"`), Mintlify syncs them — selecting one automatically selects the other.
+</Tip>
+
+## `<Steps>` and `<Step>`
+
+`<Steps>` renders a numbered sequence. Each `<Step>` accepts a `title` prop and arbitrary body content. Use this component whenever a process must be completed in a specific order:
+
+<Steps>
+  <Step title="Create a new docs project">
+    Run the following command in your terminal to scaffold a new Mintlify project:
+
+    ```bash
+    mintlify init my-docs
+    cd my-docs
+    ```
+
+    This creates a `docs.json` configuration file and a starter `index.mdx` page.
+  </Step>
+  <Step title="Start the local development server">
+    Launch the preview server to see your changes in real time:
+
+    ```bash
+    mintlify dev
+    ```
+
+    Your docs will be available at `http://localhost:3000`. The server watches for file changes and reloads automatically.
+  </Step>
+  <Step title="Deploy to Mintlify">
+    Push your changes to your connected GitHub repository. Mintlify detects the push and deploys automatically:
+
+    ```bash
+    git add .
+    git commit -m "Initial docs setup"
+    git push origin main
+    ```
+
+    Your published site will be live within seconds at your Mintlify subdomain.
+  </Step>
+</Steps>
+
+### Nesting `<CodeGroup>` Inside `<Steps>`
+
+You can nest `<CodeGroup>` inside a `<Step>` to show install commands for multiple package managers without leaving the sequential flow:
+
+<Steps>
+  <Step title="Install dependencies">
+    Choose your preferred package manager:
+
+    <CodeGroup>
+    ```bash npm
+    npm install
+    ```
+
+    ```bash yarn
+    yarn install
+    ```
+
+    ```bash pnpm
+    pnpm install
+    ```
+    </CodeGroup>
+  </Step>
+</Steps>
+
+## `<AccordionGroup>` and `<Accordion>`
+
+`<Accordion>` renders a collapsible section with a clickable title. Wrap multiple accordions in `<AccordionGroup>` to display them as a unified, visually connected list — ideal for FAQ sections:
+
+<AccordionGroup>
+  <Accordion title="Can I use a custom domain with Mintlify?">
+    Yes. You can configure a custom domain from the **Settings → Domains** page in the Mintlify dashboard. Point a `CNAME` record at `hosting.mintlify.com` and Mintlify handles SSL provisioning automatically.
+  </Accordion>
+  <Accordion title="Does Mintlify support versioned documentation?">
+    Yes. Mintlify supports multiple documentation versions through separate branches or subdirectories in your repository. You can configure version switchers in `docs.json` to let readers select the version they need.
+  </Accordion>
+  <Accordion title="How do I add a search bar to my docs?">
+    Mintlify includes AI-powered search out of the box — no configuration required. The search bar appears automatically in the top navigation. You can customise its placeholder text and keyboard shortcut in `docs.json`.
+  </Accordion>
+</AccordionGroup>
+
+A standalone `<Accordion>` without a wrapper is useful for a single optional detail block within a page:
+
+<Accordion title="Advanced configuration options">
+  The following options are only needed for custom deployment setups. Most users can skip this section.
+
+  | Option | Default | Description |
+  |---|---|---|
+  | `outputDir` | `./dist` | Directory for the built site output. |
+  | `baseUrl` | `/` | Base path when hosting at a sub-path. |
+</Accordion>

@@ -1,30 +1,11 @@
 {
-  "$schema": "https://mintlify.com/docs.json",
+  "projectType": "saas",
+  "projectName": "Mintlify",
+  "projectDescription": "A documentation platform that lets you build beautiful, AI-powered docs sites using a rich component library, with support for migrating existing content and automating documentation workflows.",
   "theme": "luma",
-  "name": "Mintlify",
-  "colors": {
-    "primary": "#ef7025",
-    "light": "#eec9bc",
-    "dark": "#4fa1ab"
-  },
-  "favicon": "/favicon.svg",
-  "logo": {
-    "light": "/logo/light.svg",
-    "dark": "/logo/dark.svg"
-  },
-  "navbar": {
-    "links": [
-      {
-        "label": "Support",
-        "href": "mailto:support@mintlify.com"
-      }
-    ],
-    "primary": {
-      "type": "button",
-      "label": "Dashboard",
-      "href": "https://dashboard.mintlify.com"
-    }
-  },
+  "primaryColor": "#ef7025",
+  "lightColor": "#eec9bc",
+  "darkColor": "#4fa1ab",
   "navigation": {
     "tabs": [
       {
@@ -96,11 +77,23 @@
       }
     ]
   },
-  "footer": {
-    "socials": {
-      "x": "https://x.com/mintlify",
-      "github": "https://github.com/mintlify",
-      "linkedin": "https://linkedin.com/company/mintlify"
-    }
-  }
+  "keyFeatures": [
+    "Rich MDX component library (cards, callouts, tabs, steps, code blocks)",
+    "AI-assisted documentation writing with Claude, ChatGPT, Cursor, and Windsurf integration",
+    "Automated migration workflow from existing docs or prototypes",
+    "docs.json configuration for navigation, branding, and site settings",
+    "Live preview with local dev server",
+    "Automatic deployment from GitHub",
+    "Built-in API reference page generation",
+    "Contextual AI tools (copy, view, ChatGPT, Claude, Perplexity, MCP, Cursor, VSCode)"
+  ],
+  "publicApiSurface": [
+    "docs.json — site configuration schema",
+    "MDX component tags: <Card>, <CardGroup>, <Tip>, <Note>, <Warning>, <Steps>, <Step>, <Tabs>, <Tab>, <CodeGroup>, <AccordionGroup>, <Accordion>, <Frame>",
+    "mint dev — local preview command",
+    "mint validate — structure validation command",
+    "mint broken-links — link checker command",
+    "npx skills add — AI tool skill installer",
+    "GitHub App — auto-deploy integration"
+  ]
 }

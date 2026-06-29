@@ -1,0 +1,133 @@
+---
+title: "Migrate Your Existing Docs or Prototype to Mintlify"
+sidebarTitle: "Migration"
+description: "Move your existing documentation, Markdown files, or working prototype to Mintlify — manually page by page or with AI-assisted batch migration."
+---
+
+Mintlify supports two migration paths: **manual** (page by page) and **AI-assisted** (batch conversion). Manual migration gives you full control over structure and design decisions as you go — it's the right choice for small sites or when you want to rethink your information architecture during the move. AI-assisted migration is faster for large sites with many existing Markdown or HTML pages, letting an AI coding assistant handle the bulk conversion while you review and refine.
+
+<CardGroup cols={2}>
+  <Card title="Manual Migration" icon="pen">
+    Full control over every page. Ideal for small sites, teams redesigning as they migrate, or anyone who wants to hand-craft the component structure from scratch.
+  </Card>
+  <Card title="AI-Assisted Migration" icon="wand-magic-sparkles">
+    Faster for large sites. An AI coding assistant batch-converts your existing pages to MDX with Mintlify components, using its built-in knowledge of the component library.
+  </Card>
+</CardGroup>
+
+## Manual migration
+
+Manual migration works well when you have a clear picture of your target structure and a manageable number of pages. Work through each step in order to avoid re-doing navigation configuration.
+
+<Steps>
+  <Step title="Audit your existing content">
+    Before touching any files, take stock of what you have. List every page in your current docs and group them into logical navigation sections — for example, "Get Started", "Guides", "API Reference", and "Reference". This grouping will map directly to the `navigation.groups` array in your `docs.json`.
+
+    As you audit, flag any pages that contain raw HTML tables, custom CSS, or embedded iframes — these will need extra attention during conversion.
+  </Step>
+  <Step title="Set up docs.json">
+    Create a `docs.json` at the root of your repository that reflects the navigation structure you planned in the previous step. Define every page in the order you want it to appear in the sidebar. You don't need the `.mdx` extension — just use the file path relative to the repo root.
+
+    ```json docs.json
+    {
+      "$schema": "https://mintlify.com/docs.json",
+      "theme": "luma",
+      "name": "My Docs",
+      "colors": {
+        "primary": "#ef7025"
+      },
+      "navigation": {
+        "groups": [
+          {
+            "group": "Get Started",
+            "pages": ["index", "quickstart", "migration-guide"]
+          },
+          {
+            "group": "Guides",
+            "pages": ["guides/authentication", "guides/webhooks"]
+          },
+          {
+            "group": "API Reference",
+            "pages": ["api-reference/overview", "api-reference/endpoints"]
+          }
+        ]
+      }
+    }
+    ```
+  </Step>
+  <Step title="Convert each page">
+    For each existing page, create a corresponding `.mdx` file. Copy the content across, add a frontmatter block with `title` and `description`, and replace plain HTML or generic Markdown constructs with Mintlify components:
+
+    | Instead of… | Use… |
+    |---|---|
+    | A plain `> blockquote` tip | `<Tip>` or `<Note>` |
+    | An HTML `<div>` card grid | `<CardGroup>` + `<Card>` |
+    | A numbered list of setup steps | `<Steps>` |
+    | Plain `<details>` / `<summary>` | `<Accordion>` / `<AccordionGroup>` |
+    | Side-by-side tabbed content | `<Tabs>` + `<Tab>` |
+
+    Keep paragraph prose as-is — Mintlify renders standard Markdown headings, lists, bold, and italic without any changes.
+  </Step>
+  <Step title="Add code examples">
+    Replace standalone fenced code blocks with `<CodeGroup>` wherever you have the same example in multiple languages. `<CodeGroup>` renders a tabbed interface and automatically highlights the active language.
+
+    Wrap each language variant as a named fenced block inside `<CodeGroup>`. For example, showing Python, JavaScript, and cURL in three tabs requires one code block per language, each with a tab label after the language name (e.g., `` ```python Python ``).
+
+    Single-language code blocks don't need `<CodeGroup>` — a plain fenced block works fine.
+  </Step>
+  <Step title="Test locally">
+    Run `mint dev` from the root of your repository to start a local preview server at [http://localhost:3000](http://localhost:3000). Work through each page in the sidebar and check:
+
+    - Navigation order and group names match `docs.json`
+    - All internal links (`href` values in `<Card>` components, inline Markdown links) resolve correctly
+    - Code blocks render with the right language and syntax highlighting
+    - Images and static assets load (place them in a `/public` folder at the repo root)
+
+    Fix any issues locally before pushing to deploy.
+  </Step>
+</Steps>
+
+## AI-assisted migration
+
+If you have dozens or hundreds of pages, let an AI coding assistant do the heavy lifting. The workflow below works with Claude Code, Cursor, Windsurf, ChatGPT, and any other assistant that supports custom skill/context injection.
+
+**1. Install the Mintlify skill**
+
+Run the following command in your terminal to give your AI assistant full knowledge of Mintlify's component library, `docs.json` schema, and best practices:
+
+```bash
+npx skills add https://mintlify.com/docs
+```
+
+**2. Open your AI coding assistant**
+
+Open Claude Code, Cursor, Windsurf, or ChatGPT in your project directory — the one containing your existing Markdown or HTML files.
+
+**3. Run the migration prompt**
+
+Give the assistant a prompt like this one. Customize the path and component preferences to match your project:
+
+```text
+Convert all my existing Markdown files in /docs to Mintlify MDX format.
+Use Mintlify components like <Card>, <Steps>, <Note>, and <CodeGroup>
+where appropriate. Generate a docs.json with proper navigation that
+reflects the existing folder structure.
+```
+
+The AI will read your existing files, infer the best component structure for each page, and produce ready-to-use `.mdx` output alongside an updated `docs.json`. Review the output page by page and adjust any components that don't match your intended design.
+
+**4. Review and refine**
+
+AI conversion is fast but not perfect. After the batch conversion, run `mint dev` and walk through every page to catch:
+
+- Components used in contexts where plain prose would read better
+- Navigation groupings that don't reflect how users actually move through your docs
+- Missing frontmatter fields (`title`, `description`, `sidebarTitle`)
+
+<Note>
+  **Documenting a Python service?** If your prototype includes Python API services, use the **API Reference** section in your `docs.json` to document your public endpoints. Use `<ParamField>` to describe request parameters and `<ResponseField>` to describe response shapes — Mintlify renders these as structured, scannable reference tables that are much easier to read than plain prose or raw JSON examples.
+</Note>
+
+<Tip>
+  Want to go deeper on the AI writing workflow? See [AI-Assisted Writing](/guides/ai-assisted-writing) for prompting strategies, component selection guidance, and tips for keeping AI-generated docs consistent with your voice and style.
+</Tip>

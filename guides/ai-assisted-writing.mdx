@@ -1,0 +1,113 @@
+---
+title: "Write and Migrate Documentation with AI Tools"
+sidebarTitle: "AI Writing"
+description: "Use Claude Code, Cursor, Windsurf, or ChatGPT with the Mintlify skill to generate, migrate, and improve your documentation with AI assistance."
+---
+
+Mintlify integrates with popular AI coding assistants through a documentation skill that teaches them the full component library, writing standards, and workflow. You can use this to generate new pages from scratch, convert existing content into structured MDX, or improve drafts you've already written. The skill works inside the tools you already use — no separate app or plugin required.
+
+## Install the Mintlify skill
+
+Run this command once in your terminal to install the Mintlify documentation skill:
+
+```bash
+npx skills add https://mintlify.com/docs
+```
+
+This installs a skill file that gives your AI assistant knowledge of:
+
+- Every Mintlify component (`<Steps>`, `<CardGroup>`, `<ParamField>`, `<Accordion>`, and more)
+- The `docs.json` schema for navigation, branding, and configuration
+- Writing conventions — tone, page structure, frontmatter fields
+- Common patterns for API reference pages, quickstarts, and guides
+
+You only need to run this once. After that, your AI assistant has the context it needs for any Mintlify documentation task.
+
+## Supported tools
+
+<CardGroup cols={2}>
+  <Card title="Claude Code" icon="terminal">
+    Run `claude` in your terminal. Claude Code picks up the skill automatically and can read your local files directly for maximum context.
+  </Card>
+  <Card title="Cursor" icon="arrow-pointer">
+    Open Cursor and use the chat panel. The Mintlify skill is available in both chat and inline edit modes.
+  </Card>
+  <Card title="Windsurf" icon="wind">
+    Open Windsurf and use the chat panel. Works the same way as Cursor — ask questions or request file generation directly.
+  </Card>
+  <Card title="ChatGPT" icon="message">
+    Paste the skill context manually into a conversation. Best for one-off tasks or when you're not working inside a code editor.
+  </Card>
+</CardGroup>
+
+## What you can ask the AI to do
+
+Once the skill is installed, you can ask your AI assistant to handle most documentation tasks end-to-end. Common use cases include:
+
+- **Generate a new page** from a brief description or a list of bullet points
+- **Convert raw Markdown to MDX** with Mintlify components added where appropriate
+- **Migrate an entire folder** of existing docs files in one batch
+- **Create `docs.json` navigation** from a list of pages or a folder structure
+- **Suggest better component usage** — for example, replacing a numbered list with `<Steps>`, or a paragraph of warnings with a `<Warning>` callout
+- **Write API reference pages** from Python, TypeScript, or other source code, using `<ParamField>` and `<ResponseField>` throughout
+
+## Example prompts
+
+<AccordionGroup>
+  <Accordion title="Generate a new feature page">
+    Use this prompt when you want to document a feature you've built but haven't written about yet. Replace `[feature name]` with your feature's name and add a sentence or two describing what it does.
+
+    ```
+    Write a Mintlify MDX page documenting the [feature name] feature.
+    Include an overview, a <Steps> guide showing how to use it,
+    and a code example. Use second person ("you") and keep the
+    tone practical and direct.
+    ```
+
+    The AI will generate a complete `.mdx` file with frontmatter, prose, steps, and a code block — ready to drop into your docs folder.
+  </Accordion>
+
+  <Accordion title="Convert existing Markdown">
+    Use this prompt when you have rough Markdown notes, a README, or docs from a previous platform that you want to bring into Mintlify.
+
+    ```
+    Convert this Markdown file to Mintlify MDX. Use appropriate
+    components (Steps, Note, CodeGroup, Card) where they improve
+    readability. Keep the content accurate — don't add information
+    that isn't already here. Add frontmatter with a title and
+    description.
+
+    [paste your Markdown here]
+    ```
+
+    The AI will restructure the content using Mintlify components without inventing new information.
+  </Accordion>
+
+  <Accordion title="Create API reference from code">
+    Use this prompt when you want to turn a function, route, or endpoint definition directly into a Mintlify API reference page.
+
+    ```
+    Create a Mintlify API reference page for this endpoint:
+    [paste endpoint code]
+
+    Use ParamField for all request parameters (include type,
+    required/optional, and a description for each). Use
+    ResponseField for all response fields. Add a brief
+    description of what the endpoint does at the top of the page.
+    ```
+
+    This works well with Python Flask/FastAPI routes, Express handlers, or any annotated function that has clear input and output shapes.
+  </Accordion>
+</AccordionGroup>
+
+## Contextual AI in your docs site
+
+Beyond helping you write documentation, Mintlify builds AI assistance directly into your published docs site for your readers. Every Mintlify docs site includes a contextual AI assistant in the sidebar — visitors can ask questions about your documentation and get answers without leaving the page.
+
+Your readers can also open answers in their preferred AI tool. The sidebar includes one-click buttons to continue a conversation in Claude, ChatGPT, Perplexity, and more — so power users can go deeper without friction.
+
+This means publishing good documentation has a compounding effect: the more thorough and well-structured your pages are, the better the AI answers your readers receive.
+
+<Tip>
+  The more context you give the AI — your existing code, README, or implementation notes — the more accurate the output. Always review AI-generated content against your actual implementation before publishing. Parameter names, return types, and behavioral details are easy to get slightly wrong without a careful read.
+</Tip>

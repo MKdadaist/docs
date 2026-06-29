@@ -1,0 +1,116 @@
+---
+title: "Pages, Files, and Navigation in Mintlify"
+sidebarTitle: "Pages & Nav"
+description: "Understand how Mintlify turns MDX files into navigable doc pages — file naming, folder structure, frontmatter, and docs.json navigation."
+---
+
+Every page in your Mintlify site is a plain `.mdx` file on disk. Mintlify reads those files, converts them into beautifully styled web pages, and uses your `docs.json` file to decide how they're grouped, ordered, and labeled in the sidebar. Once you understand that two-part relationship — files on disk, navigation in `docs.json` — the rest of the system clicks into place.
+
+## Pages
+
+Mintlify pages are written in **MDX**, a superset of Markdown that lets you embed JSX components alongside your prose. Any `.mdx` file you add to your repo automatically becomes a routable page — no build config, no manual registration required.
+
+**File paths map directly to URL slugs.** A file at `guides/setup.mdx` becomes the page at `/guides/setup`, and `api-reference/authentication.mdx` becomes `/api-reference/authentication`. Keep your filenames lowercase with hyphens (kebab-case) to produce clean, predictable URLs.
+
+### Frontmatter
+
+Every page should open with a YAML frontmatter block. Mintlify uses this metadata to populate the browser tab title, the sidebar label, and the SEO description for that page.
+
+```mdx
+---
+title: "Getting Started with the API"
+sidebarTitle: "Getting Started"
+description: "Learn how to authenticate and make your first API request in under five minutes."
+---
+```
+
+| Field | Required | Purpose |
+|---|---|---|
+| `title` | ✅ | Full page title shown in the `<title>` tag and at the top of the page |
+| `sidebarTitle` | Recommended | Shorter label used in the sidebar when `title` is long |
+| `description` | Recommended | One-sentence summary used for SEO and link previews |
+| `icon` | Optional | An icon slug (e.g. `"rocket"`) shown next to the sidebar label |
+| `mode` | Optional | Set to `"wide"` to remove the right-hand table-of-contents column |
+
+---
+
+## Folder Structure
+
+You can organize `.mdx` files into any folder hierarchy you like. A typical Mintlify repo looks something like this:
+
+```
+docs/
+├── docs.json
+├── introduction.mdx
+├── quickstart.mdx
+├── guides/
+│   ├── setup.mdx
+│   └── usage.mdx
+└── api-reference/
+    ├── introduction.mdx
+    └── authentication.mdx
+```
+
+Subfolders become URL path segments — there's no limit to nesting depth — but shallow, well-named structures are easier to maintain and easier for readers to scan.
+
+---
+
+## Navigation
+
+The `docs.json` file controls exactly which pages appear in the sidebar, in what order, and under which group headings. Even if a file exists in your repo, it won't appear in the sidebar unless it's listed in `docs.json`.
+
+Navigation is organized into three levels:
+
+- **Tabs** — top-level sections that appear in the navbar (e.g., *Guides*, *API Reference*)
+- **Groups** — labeled clusters of pages within a tab (e.g., *Authentication*, *Webhooks*)
+- **Pages** — individual `.mdx` files listed by their path relative to the repo root (without the `.mdx` extension)
+
+Here's a minimal `docs.json` navigation object that maps to the folder structure above:
+
+```json
+{
+  "$schema": "https://mintlify.com/docs.json",
+  "name": "Acme Docs",
+  "navigation": [
+    {
+      "tab": "Guides",
+      "groups": [
+        {
+          "group": "Getting Started",
+          "pages": [
+            "introduction",
+            "quickstart"
+          ]
+        },
+        {
+          "group": "Guides",
+          "pages": [
+            "guides/setup",
+            "guides/usage"
+          ]
+        }
+      ]
+    },
+    {
+      "tab": "API Reference",
+      "groups": [
+        {
+          "group": "Overview",
+          "pages": [
+            "api-reference/introduction",
+            "api-reference/authentication"
+          ]
+        }
+      ]
+    }
+  ]
+}
+```
+
+### Keeping the sidebar readable
+
+Use `sidebarTitle` in your frontmatter whenever the full page `title` is too long to fit comfortably in the sidebar. For example, a page titled *"Configuring Webhook Retry Policies and Failure Thresholds"* might carry `sidebarTitle: "Retry Policies"` to keep the sidebar scannable.
+
+<Note>
+  The order of pages in `docs.json` determines the order they appear in the sidebar — the first entry in a group appears at the top. If you'd prefer a visual interface, you can also drag and drop pages to reorder them directly in the [Mintlify dashboard](https://dashboard.mintlify.com).
+</Note>

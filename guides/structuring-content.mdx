@@ -1,0 +1,176 @@
+---
+title: "How to Structure Your Mintlify Documentation"
+sidebarTitle: "Content Structure"
+description: "Learn how to organize your Mintlify docs into effective sections — navigation groups, tabs, page depth, and the recommended structure for API services."
+---
+
+Good documentation structure helps users find answers quickly. Mintlify's navigation system supports tabs (for major sections like Docs vs. API Reference), groups (for topic clusters), and pages — all controlled in `docs.json`. Getting the structure right before you start writing saves significant reorganization later and makes your docs feel intentional rather than accumulated.
+
+## Recommended structure by project type
+
+There's no single right answer, but certain patterns work well for common project types. Use these as starting points, not rigid rules.
+
+### API services (Python, Node, etc.)
+
+An API service typically has two distinct audiences: developers reading conceptual guides, and developers looking up specific endpoints. Tabs let you separate these cleanly.
+
+```json docs.json
+{
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "Documentation",
+        "groups": [
+          {
+            "group": "Get Started",
+            "pages": ["introduction", "quickstart", "authentication"]
+          },
+          {
+            "group": "Core Concepts",
+            "pages": ["concepts/resources", "concepts/pagination", "concepts/errors"]
+          },
+          {
+            "group": "Guides",
+            "pages": [
+              "guides/first-request",
+              "guides/filtering-results",
+              "guides/handling-webhooks"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "API Reference",
+        "groups": [
+          {
+            "group": "Overview",
+            "pages": ["api-reference/introduction", "api-reference/authentication"]
+          },
+          {
+            "group": "Endpoints",
+            "pages": [
+              "api-reference/users",
+              "api-reference/orders",
+              "api-reference/products",
+              "api-reference/webhooks"
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+### Product and SaaS docs
+
+Product docs usually have a single audience — end users — so a single tab with well-organized groups tends to work better than splitting across tabs.
+
+```json docs.json
+{
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "Documentation",
+        "groups": [
+          {
+            "group": "Get Started",
+            "pages": ["introduction", "quickstart", "setup"]
+          },
+          {
+            "group": "Features",
+            "pages": [
+              "features/dashboard",
+              "features/integrations",
+              "features/notifications"
+            ]
+          },
+          {
+            "group": "Configuration",
+            "pages": ["configuration/settings", "configuration/environment-variables"]
+          },
+          {
+            "group": "Troubleshooting",
+            "pages": ["troubleshooting/common-errors", "troubleshooting/faq"]
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+## Navigation principles
+
+These principles apply regardless of project type. They're distilled from what makes docs sites easy to use in practice.
+
+**Keep the sidebar scannable.** Group and page titles should be 1–3 words. A title like "How to Authenticate Using an API Key" becomes "Authentication". Users scan the sidebar — they don't read it.
+
+**15–25 total pages is the sweet spot.** Below 15 and you may be missing important content. Above 25 and users start to feel overwhelmed and may not find what they need. If you're going well above 25, consider whether some pages should be combined or whether a tab structure would help.
+
+**Every page should have a clear, unique purpose.** If two pages cover the same topic at different depths, merge them. Thin pages — pages with fewer than 150–200 words of real content — are usually better absorbed into a related page.
+
+**Use tabs only when you have genuinely separate audiences.** Tabs add navigation overhead. If all your users are developers who read both the guides and the API reference, tabs make sense. If everyone reads everything, a single-tab structure is simpler to maintain and easier to navigate.
+
+## The Get Started group
+
+Every Mintlify docs site should have a Get Started group as the first group in the sidebar. This is the most important real estate on your docs site — it's where every new user begins.
+
+A solid Get Started group contains exactly three pages:
+
+| Page | Purpose |
+|---|---|
+| `introduction.mdx` | What your product is, who it's for, and what they can do with it |
+| `quickstart.mdx` | The fastest path from zero to a working result — a single, clear task with a real output |
+| `authentication.mdx` or `setup.mdx` | How to get credentials and configure the environment before doing anything else |
+
+Resist the temptation to add more pages to Get Started. If it grows past three or four pages, users lose the thread of what to do first.
+
+## API reference structure
+
+The API Reference tab (or section) works best when it mirrors how developers think about your service — by resource, not by HTTP method.
+
+Group endpoints by resource, with one page per major resource:
+
+```
+api-reference/
+  introduction.mdx       ← base URL, versioning, error format
+  authentication.mdx     ← how to include credentials
+  users.mdx              ← all /users endpoints together
+  orders.mdx             ← all /orders endpoints together
+  products.mdx           ← all /products endpoints together
+  webhooks.mdx           ← webhook events and payloads
+```
+
+Within each resource page, use `<ParamField>` and `<ResponseField>` throughout. Describe every parameter — even obvious ones — because developers copy from docs without always reading prose explanations.
+
+```mdx api-reference/users.mdx
+---
+title: "Users"
+description: "Create and manage user accounts."
+---
+
+## Create a user
+
+<ParamField body="email" type="string" required>
+  The user's email address. Must be unique across your account.
+</ParamField>
+
+<ParamField body="name" type="string">
+  The user's display name. Defaults to the portion of the email before `@`.
+</ParamField>
+
+### Response
+
+<ResponseField name="id" type="string">
+  Unique identifier for the created user, prefixed with `usr_`.
+</ResponseField>
+
+<ResponseField name="email" type="string">
+  The email address provided at creation.
+</ResponseField>
+```
+
+<Tip>
+  Start with 5–10 pages and expand over time. An incomplete but well-structured site is better than an overwhelming one. Users trust a site that is organized and consistent — they'll forgive gaps in coverage, but not a confusing layout.
+</Tip>

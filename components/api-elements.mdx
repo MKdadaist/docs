@@ -1,0 +1,186 @@
+---
+title: "API Reference Components: ParamField and ResponseField"
+sidebarTitle: "API Elements"
+description: "Document API request parameters and response fields in Mintlify using ParamField and ResponseField components with type annotations and validation rules."
+---
+
+Mintlify's `<ParamField>` and `<ResponseField>` components make it easy to document API request and response shapes with types, required flags, and descriptions — all with consistent styling that matches the rest of your docs. Use these components to hand-craft API reference pages, or alongside auto-generated OpenAPI pages when you need extra prose or examples.
+
+## `<ParamField>`
+
+`<ParamField>` documents a single input parameter. The first prop specifies the parameter's **location** (`body`, `query`, `path`, or `header`) and its **name**.
+
+```mdx
+<ParamField body="name" type="string" required>
+  The display name for the new resource. Must be between 1 and 128 characters.
+</ParamField>
+
+<ParamField body="limit" type="integer" default="20">
+  Maximum number of results to return. Accepts values between 1 and 100.
+</ParamField>
+```
+
+### ParamField Props
+
+| Prop | Type | Description |
+|---|---|---|
+| `body` | `string` | Name of a request body parameter (JSON). |
+| `query` | `string` | Name of a URL query string parameter. |
+| `path` | `string` | Name of a URL path parameter (e.g., `{id}`). |
+| `header` | `string` | Name of an HTTP request header. |
+| `type` | `string` | Data type — e.g., `string`, `integer`, `boolean`, `object`, `array`. |
+| `required` | `boolean` | Marks the parameter as required (displays a required badge). |
+| `default` | `string` | Default value applied when the parameter is omitted. |
+
+Only one location prop (`body`, `query`, `path`, or `header`) should be used per `<ParamField>`.
+
+## `<ResponseField>`
+
+`<ResponseField>` documents a single field in an API response body. It accepts a `name` and a `type`.
+
+```mdx
+<ResponseField name="id" type="string">
+  Unique identifier for the created resource. Format: `res_<alphanumeric>`.
+</ResponseField>
+
+<ResponseField name="created_at" type="string">
+  ISO 8601 timestamp of when the resource was created. Example: `2024-01-15T09:30:00Z`.
+</ResponseField>
+
+<ResponseField name="status" type="string">
+  Current status of the resource. One of `active`, `paused`, or `deleted`.
+</ResponseField>
+```
+
+## `<Expandable>` — Documenting Nested Objects
+
+When a parameter or response field is an object with its own sub-fields, wrap the nested `<ParamField>` or `<ResponseField>` components in an `<Expandable>` block. Readers can expand it inline without leaving the page.
+
+```mdx
+<ResponseField name="user" type="object">
+  The user who created the resource.
+
+  <Expandable title="user properties">
+    <ResponseField name="user.id" type="string">
+      Unique identifier for the user.
+    </ResponseField>
+    <ResponseField name="user.email" type="string">
+      Email address associated with the user account.
+    </ResponseField>
+    <ResponseField name="user.role" type="string">
+      The user's permission level. One of `owner`, `editor`, or `viewer`.
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+```
+
+## Full Page Example
+
+Here is a complete API endpoint documentation block that combines `<ParamField>`, `<ResponseField>`, and a `<CodeGroup>` — the typical structure for a hand-authored API reference page.
+
+---
+
+## Create a Resource
+
+`POST /v1/resources`
+
+Creates a new resource under the authenticated account.
+
+### Request
+
+<ParamField body="name" type="string" required>
+  The display name for the new resource. Must be between 1 and 128 characters.
+</ParamField>
+
+<ParamField body="description" type="string">
+  Optional description. Supports plain text only; Markdown is not rendered.
+</ParamField>
+
+<ParamField body="limit" type="integer" default="20">
+  Maximum number of results to return per page. Accepts values between 1 and 100.
+</ParamField>
+
+<ParamField body="tags" type="string[]">
+  An array of tag strings to attach to the resource for filtering.
+</ParamField>
+
+### Response
+
+Returns a `201 Created` response with the newly created resource object.
+
+<ResponseField name="id" type="string">
+  Unique identifier for the created resource. Format: `res_<alphanumeric>`.
+</ResponseField>
+
+<ResponseField name="name" type="string">
+  The display name provided in the request.
+</ResponseField>
+
+<ResponseField name="created_at" type="string">
+  ISO 8601 timestamp of when the resource was created.
+</ResponseField>
+
+<ResponseField name="owner" type="object">
+  The authenticated user who created the resource.
+
+  <Expandable title="owner properties">
+    <ResponseField name="owner.id" type="string">
+      Unique identifier for the owner.
+    </ResponseField>
+    <ResponseField name="owner.email" type="string">
+      Email address of the owner.
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+### Example
+
+<CodeGroup>
+```bash cURL
+curl -X POST https://api.example.com/v1/resources \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "My first resource",
+    "description": "Created via the API",
+    "limit": 50
+  }'
+```
+
+```python Python
+import requests
+
+response = requests.post(
+    "https://api.example.com/v1/resources",
+    headers={"Authorization": "Bearer YOUR_API_KEY"},
+    json={
+        "name": "My first resource",
+        "description": "Created via the API",
+        "limit": 50,
+    },
+)
+print(response.json())
+```
+
+```javascript JavaScript
+const response = await fetch("https://api.example.com/v1/resources", {
+  method: "POST",
+  headers: {
+    Authorization: "Bearer YOUR_API_KEY",
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({
+    name: "My first resource",
+    description: "Created via the API",
+    limit: 50,
+  }),
+});
+
+const data = await response.json();
+console.log(data);
+```
+</CodeGroup>
+
+<Tip>
+  You can also use OpenAPI / Swagger spec files to auto-generate API reference pages directly from your existing spec. See the API Reference tab for details on connecting a spec file to Mintlify.
+</Tip>

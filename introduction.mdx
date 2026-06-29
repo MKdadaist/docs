@@ -1,0 +1,45 @@
+---
+title: "Mintlify: Beautiful, AI-Powered Documentation"
+sidebarTitle: "Introduction"
+description: "Mintlify is a documentation platform for teams who want to ship beautiful, searchable, AI-powered docs with a rich component library and zero infrastructure."
+---
+
+Welcome to Mintlify — the documentation platform built for teams who care about great developer experience. With Mintlify, you write MDX pages using a rich component library, connect your GitHub repo, and get a fully hosted, AI-powered docs site with search, versioning, and analytics built in. No servers to manage, no build pipelines to configure, and no design work required.
+
+<CardGroup cols={2}>
+  <Card href="/quickstart" icon="rocket" title="Quick Start">
+    Get your first docs site live in minutes — from a blank repo to a deployed site in four steps.
+  </Card>
+  <Card href="/migration-guide" icon="arrow-right-arrow-left" title="Migration Guide">
+    Move your existing docs or prototype to Mintlify with a step-by-step walkthrough.
+  </Card>
+  <Card href="/concepts/components" icon="puzzle-piece" title="Components">
+    Explore the full MDX component library — cards, steps, callouts, code groups, and more.
+  </Card>
+  <Card href="/guides/ai-assisted-writing" icon="wand-magic-sparkles" title="AI Writing">
+    Use AI tools to write, refactor, and migrate docs faster with Mintlify's AI workflow.
+  </Card>
+</CardGroup>
+
+## How it works
+
+Getting from zero to a live docs site takes four steps. Each step is covered in detail in the [Quickstart](/quickstart).
+
+<Steps>
+  <Step title="Create a GitHub repo">
+    Fork the [Mintlify starter template](https://github.com/mintlify/starter) or create a new repo and add a `docs.json` configuration file at the root. This file defines your site's theme, colors, and navigation structure.
+  </Step>
+  <Step title="Connect to the Mintlify dashboard">
+    Sign in at [dashboard.mintlify.com](https://dashboard.mintlify.com), create a new project, and install the Mintlify GitHub App on your repository. Mintlify reads your repo and sets up the deployment pipeline automatically.
+  </Step>
+  <Step title="Write MDX pages with components">
+    Create `.mdx` files in your repo and use Mintlify's component library — `<Card>`, `<Steps>`, `<Note>`, `<CodeGroup>`, and dozens more — to build structured, readable pages without writing any custom CSS or HTML.
+  </Step>
+  <Step title="Push to deploy">
+    Commit and push to your default branch. Mintlify detects the change, builds your site, and publishes the update — usually within 60 seconds. Every push to the default branch deploys automatically.
+  </Step>
+</Steps>
+
+<Tip>
+  Migrating from an existing prototype or docs site? See the [Migration Guide](/migration-guide) for a step-by-step walkthrough of both manual and AI-assisted migration paths.
+</Tip>

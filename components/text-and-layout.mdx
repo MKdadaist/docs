@@ -1,0 +1,105 @@
+---
+title: "Text, Headings, and Layout Components in Mintlify"
+sidebarTitle: "Text & Layout"
+description: "Use Mintlify's text and layout primitives — headings, paragraphs, lists, images, dividers, and the Frame wrapper — to structure your documentation pages."
+---
+
+MDX pages support standard Markdown syntax for all text content, and Mintlify adds the `<Frame>` component for wrapping images and screenshots with consistent border and shadow styling. You don't need any custom CSS — the primitives below cover the vast majority of documentation layouts.
+
+## Headings
+
+Use `#`, `##`, and `###` to create headings. Mintlify automatically generates the page's `<h1>` from your frontmatter `title`, so **start body headings at `##`** to keep the heading hierarchy correct.
+
+```mdx
+## Section title
+
+### Sub-section title
+```
+
+Headings also appear automatically in the right-hand page outline, so readers can jump to any section directly.
+
+## Text Formatting
+
+Mintlify renders standard Markdown inline formatting:
+
+| Syntax | Result |
+|---|---|
+| `**bold text**` | **bold text** |
+| `*italic text*` | *italic text* |
+| `` `inline code` `` | `inline code` |
+| `~~strikethrough~~` | ~~strikethrough~~ |
+
+You can combine these — for example, **`bold inline code`** is written as ` **`code`** `.
+
+## Lists
+
+**Unordered list** — prefix items with `-` or `*`:
+
+```mdx
+- First item
+- Second item
+  - Nested item
+- Third item
+```
+
+**Ordered list** — prefix items with a number followed by `.`:
+
+```mdx
+1. Install the CLI
+2. Authenticate your account
+3. Deploy your docs
+```
+
+Both list types support arbitrary nesting by indenting child items by two spaces.
+
+## Images
+
+You can embed images using standard Markdown syntax:
+
+```mdx
+![Alt text describing the image](./images/dashboard.png)
+```
+
+For external images, use an absolute URL:
+
+```mdx
+![Mintlify logo](https://mintlify.com/logo.png)
+```
+
+### Wrapping Images with `<Frame>`
+
+Wrap any image in `<Frame>` to give it a consistent border and drop-shadow — ideal for screenshots and UI walkthroughs:
+
+```mdx
+<Frame>
+  ![Dashboard screenshot](./images/dashboard.png)
+</Frame>
+```
+
+You can also add a caption using the `caption` prop:
+
+```mdx
+<Frame caption="The main dashboard after your first deployment">
+  ![Dashboard screenshot](./images/dashboard.png)
+</Frame>
+```
+
+`<Frame>` works with any block-level content, not just images — you can wrap videos, iframes, or other embeds in the same way.
+
+## Dividers
+
+Use three dashes `---` on their own line to insert a horizontal rule between sections:
+
+```mdx
+Some content above the divider.
+
+---
+
+Some content below the divider.
+```
+
+Dividers are useful for visually separating unrelated sections on a long page without introducing a new heading level.
+
+## A Note on Raw HTML Layout
+
+Avoid using raw HTML `<div>` elements for layout. Mintlify provides purpose-built layout components — such as `<CardGroup>`, `<Columns>`, and `<Tabs>` — that handle spacing, responsiveness, and dark-mode compatibility automatically. Raw `<div>` tags can produce inconsistent results across themes and may break the page outline.

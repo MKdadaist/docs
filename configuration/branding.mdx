@@ -1,0 +1,108 @@
+---
+title: "Branding Configuration: Logo, Colors, and Themes"
+sidebarTitle: "Branding"
+description: "Configure your Mintlify site's visual identity — theme selection, brand colors, logo files, and favicon — all in docs.json."
+---
+
+Mintlify gives you full control over your site's visual identity through the `docs.json` file. Set your theme, brand colors, logo, and favicon to match your product's design — no custom CSS required. All branding fields live at the top level of `docs.json` and take effect globally across every page on your site.
+
+## Themes
+
+A theme controls the overall look and feel of your docs site: typography, spacing, component shape, and layout density. Choose the one that best matches your product's personality.
+
+| Theme      | Style                                 | Best for                                     |
+| ---------- | ------------------------------------- | -------------------------------------------- |
+| `luma`     | Clean, modern, high contrast          | Developer tools and SaaS products            |
+| `willow`   | Soft, rounded, approachable           | Consumer products and onboarding-focused docs |
+| `palm`     | Bold, editorial, strong hierarchy     | Marketing-adjacent documentation             |
+| `almond`   | Warm, neutral tones, minimal          | Design systems and internal docs             |
+| `aspen`    | Airy, spacious, light-weight feel     | Knowledge bases and support centers          |
+| `maple`    | Rich, structured, content-dense       | Technical references and API docs            |
+| `sequoia`  | Monochrome-forward, serious, precise  | Enterprise and compliance-focused docs       |
+
+Set your chosen theme with the `theme` field:
+
+```json docs.json
+{
+  "theme": "luma"
+}
+```
+
+## Colors
+
+The `colors` object defines the brand palette Mintlify applies to interactive elements — buttons, active sidebar links, inline hyperlinks, and hover states.
+
+```json docs.json
+{
+  "colors": {
+    "primary": "#ef7025",
+    "light": "#eec9bc",
+    "dark": "#4fa1ab"
+  }
+}
+```
+
+| Field     | Required | Description                                                                 |
+| --------- | -------- | --------------------------------------------------------------------------- |
+| `primary` | ✅ Yes    | Your main brand color. Applied to buttons, links, and active navigation.    |
+| `light`   | No       | Accent color for light mode. Defaults to a tint derived from `primary`.     |
+| `dark`    | No       | Accent color for dark mode. Defaults to a shade derived from `primary`.     |
+
+<Tip>
+  Use your brand's primary color for `primary`. Mintlify derives button hover states and link colors from this value, so picking a color with good contrast against both white and dark backgrounds gives you the best result without additional configuration.
+</Tip>
+
+All color values must be valid CSS hex codes (e.g., `"#ef7025"`). Three-character shorthand (`"#f70"`) is also accepted.
+
+## Logo
+
+The `logo` object accepts separate image paths for light and dark color schemes. Mintlify switches between them automatically based on the active mode.
+
+```json docs.json
+{
+  "logo": {
+    "light": "/logo/light.svg",
+    "dark": "/logo/dark.svg"
+  }
+}
+```
+
+| Field         | Description                                                                      |
+| ------------- | -------------------------------------------------------------------------------- |
+| `logo.light`  | Shown when **dark mode** is active. Use a white or light-colored version of your logo. |
+| `logo.dark`   | Shown when **light mode** is active. Use your full-color or dark-colored logo.   |
+
+**Accepted formats:** SVG (recommended for sharpness at any size), PNG, and WebP.
+
+**Recommended dimensions:** Use a horizontal lockup at approximately 200×50px. Mintlify scales the logo proportionally, but starting at this aspect ratio ensures it looks good in the navbar without cropping or distortion.
+
+<Note>
+  Logo paths are relative to the root of your docs repository. Placing your logo files in a `/logo/` folder keeps your repo organized and matches the convention used in the example above.
+</Note>
+
+## Favicon
+
+The `favicon` field points to a small icon that browsers display in tabs, bookmarks, and history.
+
+```json docs.json
+{
+  "favicon": "/favicon.svg"
+}
+```
+
+**Recommended formats:**
+
+- **SVG** — scales perfectly to any size and supports dark mode variants natively in modern browsers
+- **PNG (32×32)** — a reliable fallback for older browsers
+
+The path is relative to the root of your docs repository. A file at `favicon.svg` in your repo root becomes `"/favicon.svg"` in `docs.json`.
+
+## Dark mode
+
+Mintlify automatically supports dark mode for all themes — no extra configuration is required. When a reader's OS or browser preference is set to dark, Mintlify:
+
+- Switches to the dark variant of your theme
+- Swaps in the `logo.light` image (the light-colored logo)
+- Applies `colors.dark` as the active accent color
+
+Readers can also toggle between light and dark mode manually using the theme switcher in the navbar. Make sure both your `logo.light` and `logo.dark` assets are present so the logo always renders correctly regardless of the active mode.

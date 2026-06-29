@@ -1,47 +1,84 @@
 ---
-title: "Quickstart"
-description: "Begin with a guide on the fastest path to a successful outcome"
+title: "Get Started with Mintlify in Under 5 Minutes"
+sidebarTitle: "Quickstart"
+description: "Set up your Mintlify docs site from scratch — create a repo, connect your account, write your first page, and deploy in four steps."
 ---
 
-Describe how someone begins using your product. What is the first thing they need to do? Are there any prerequisites?
+This guide takes you from zero to a live, publicly accessible docs site in under five minutes. You'll create a GitHub repository, connect it to Mintlify, write your first MDX page, and push a deployment — all without touching a server or a build configuration.
 
-A quickstart should take someone from zero to using your product. They'll get a quick win and a sense of what they can accomplish.
-
-## Prerequisites
-
-Before you begin, you must have:
-
-- Requirement one (for example, Node.js 18+, a free account, an API key)
-- Requirement two (for example, a compatible device, a compatible browser, a compatible operating system)
-
-## Get started
+<Note>
+  **Prerequisites:** You'll need a [GitHub account](https://github.com) and [Node.js 18+](https://nodejs.org) installed on your machine. Node.js is required only for local preview; the deployed site is fully managed by Mintlify.
+</Note>
 
 <Steps>
-  <Step title="Install">
-    Describe how to install your product or sign up.
+  <Step title="Create your repo">
+    The fastest way to get started is to fork the official Mintlify starter template. Navigate to [github.com/mintlify/starter](https://github.com/mintlify/starter) and click **Fork** to copy it into your own GitHub account.
 
-    ```bash
-    npm install your-package
+    If you prefer to start from scratch, create a new GitHub repository and add a `docs.json` file at the root. This file is the single source of truth for your site's theme, name, colors, and navigation. A minimal `docs.json` looks like this:
+
+    ```json docs.json
+    {
+      "$schema": "https://mintlify.com/docs.json",
+      "theme": "luma",
+      "name": "My Docs",
+      "colors": {
+        "primary": "#ef7025"
+      },
+      "navigation": {
+        "groups": [
+          {
+            "group": "Get Started",
+            "pages": ["index"]
+          }
+        ]
+      }
+    }
     ```
+
+    Every page listed under `navigation` corresponds to a `.mdx` file in your repo. The entry `"index"` maps to `index.mdx` at the repo root.
   </Step>
-  <Step title="Configure">
-    Describe any setup or configuration needed before first use.
+  <Step title="Connect to the Mintlify dashboard">
+    Go to [dashboard.mintlify.com](https://dashboard.mintlify.com) and sign in with your GitHub account. Click **New Project**, then follow the prompts to:
 
-    ```bash
-    your-cli init
-    ```
+    1. Install the **Mintlify GitHub App** on your account or organization.
+    2. Select the repository you created in the previous step.
+    3. Choose your default branch (usually `main`).
+
+    Once connected, Mintlify will run its first build automatically. You'll see a live preview URL in the dashboard within about 60 seconds.
   </Step>
-  <Step title="Run it">
-    Show the first thing a user does to see it working.
+  <Step title="Write your first page">
+    Create a file called `index.mdx` at the root of your repository. At minimum, every page needs a frontmatter block with a `title` and `description`, followed by your content.
+
+    Here's a complete minimal example you can copy and customize:
+
+    ```mdx index.mdx
+    ---
+    title: "Welcome to My Docs"
+    description: "Everything you need to get up and running."
+    ---
+
+    Welcome! This is the home page of your new Mintlify docs site. Edit this file to introduce your product, link to key guides, and help new users find what they need.
+
+    <Card title="Quick Start" icon="rocket" href="/quickstart">
+      Jump straight into a step-by-step setup guide.
+    </Card>
+    ```
+
+    Mintlify's component library gives you ready-made building blocks — `<Card>`, `<CardGroup>`, `<Steps>`, `<Note>`, `<Tip>`, `<Warning>`, `<CodeGroup>`, and many more. You don't need to write any HTML or CSS; just drop components directly into your MDX.
+  </Step>
+  <Step title="Deploy">
+    Commit your changes and push to your default branch:
 
     ```bash
-    your-cli start
+    git add .
+    git commit -m "Add initial docs"
+    git push origin main
     ```
+
+    Mintlify detects the push, rebuilds your site, and publishes the update automatically. Deployments typically complete within **60 seconds**. You can monitor the build status in the [Mintlify dashboard](https://dashboard.mintlify.com) and share the public URL with your team as soon as it's live.
   </Step>
 </Steps>
 
 <Tip>
-  Give people a way to get help. This could be a link to a support page, a chat with a customer support agent, or a forum for your product.
-
-  Example: Need help? Reach out to us at [support@yourcompany.com](mailto:support@yourcompany.com).
+  Before pushing, you can preview your docs locally by running `mint dev` in your repo directory. This starts a local dev server at [http://localhost:3000](http://localhost:3000) with hot reload — so you can see every change instantly without waiting for a deployment.
 </Tip>

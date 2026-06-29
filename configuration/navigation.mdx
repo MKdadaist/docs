@@ -1,0 +1,137 @@
+---
+title: "Navigation Configuration: Tabs, Groups, and Pages"
+sidebarTitle: "Navigation"
+description: "Configure sidebar navigation in docs.json using tabs, groups, and page lists — control the order, hierarchy, and labeling of every page in your Mintlify site."
+---
+
+Mintlify's navigation is defined in the `navigation` object inside `docs.json`. You can organize pages into groups (for a single-tab site) or into tabs with groups underneath (for multi-section sites like Documentation + API Reference). The order you define here is exactly the order your readers will see in the sidebar.
+
+## Navigation object structure
+
+The `navigation` object supports three levels of hierarchy:
+
+| Level      | Key      | Description                                                          |
+| ---------- | -------- | -------------------------------------------------------------------- |
+| **Tabs**   | `tabs`   | Top-level sections rendered as tab buttons above the sidebar         |
+| **Groups** | `groups` | Collapsible sidebar headings that contain a list of pages            |
+| **Pages**  | `pages`  | Individual page slugs — each maps to a `.mdx` file in your repo      |
+
+For simple sites, you can skip tabs entirely and use groups at the top level. For larger sites with distinct sections (e.g., a user guide and an API reference), tabs let you switch between separate navigation trees.
+
+## Single-section site (groups only)
+
+If your site has one cohesive documentation area, define `groups` directly on the `navigation` object — no `tabs` needed.
+
+```json docs.json
+{
+  "navigation": {
+    "groups": [
+      { "group": "Get Started", "pages": ["introduction", "quickstart"] },
+      { "group": "Guides", "pages": ["guides/setup", "guides/usage"] }
+    ]
+  }
+}
+```
+
+This renders a sidebar with two collapsible sections — **Get Started** and **Guides** — each containing the listed pages in the specified order.
+
+## Multi-tab site
+
+For sites with multiple top-level sections, wrap your groups inside `tabs`. Each tab object requires a `tab` label and a `groups` array.
+
+```json docs.json
+{
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "Documentation",
+        "groups": [
+          { "group": "Get Started", "pages": ["introduction", "quickstart"] },
+          { "group": "Guides", "pages": ["guides/setup", "guides/usage"] }
+        ]
+      },
+      {
+        "tab": "API Reference",
+        "groups": [
+          {
+            "group": "Endpoints",
+            "pages": [
+              "api-reference/overview",
+              "api-reference/authentication",
+              "api-reference/users/list",
+              "api-reference/users/create"
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+Tabs are rendered as clickable labels above the sidebar. Switching tabs replaces the entire sidebar with the groups defined for that tab.
+
+## Page slugs
+
+Each entry in a `pages` array is a **page slug** — the file path relative to the root of your docs repository, without the `.mdx` extension.
+
+| File path                          | Slug                            |
+| ---------------------------------- | ------------------------------- |
+| `introduction.mdx`                 | `"introduction"`                |
+| `guides/setup.mdx`                 | `"guides/setup"`                |
+| `api-reference/users/list.mdx`     | `"api-reference/users/list"`    |
+
+Slugs are case-sensitive and must exactly match the file path on disk.
+
+<Note>
+  Every page listed in `docs.json` must have a corresponding `.mdx` file. Pages with no matching file will result in a 404 for your readers.
+</Note>
+
+## Ordering
+
+Pages and groups render in the **exact order** you list them in `docs.json`. To reorder pages, change their position in the array and redeploy — or use the drag-to-reorder interface in the Mintlify dashboard, which writes the change back to your `docs.json` automatically.
+
+```json
+{
+  "group": "Get Started",
+  "pages": [
+    "introduction",   // shown first
+    "quickstart",     // shown second
+    "installation"    // shown third
+  ]
+}
+```
+
+## Nested folders
+
+Mintlify supports arbitrary folder depth. You can place pages in as many nested subdirectories as your project requires — just make sure the slug in `docs.json` mirrors the actual folder structure.
+
+```json
+{
+  "group": "Users",
+  "pages": [
+    "api-reference/users/list",
+    "api-reference/users/create",
+    "api-reference/users/update",
+    "api-reference/users/delete"
+  ]
+}
+```
+
+The corresponding files would live at `api-reference/users/list.mdx`, `api-reference/users/create.mdx`, and so on.
+
+## `sidebarTitle` vs `title`
+
+Every `.mdx` page can set two different title fields in its frontmatter:
+
+- **`title`** — used as the page's `<h1>` heading, the browser tab title, and in SEO metadata. Write it as a full, descriptive phrase.
+- **`sidebarTitle`** — the label shown in the sidebar navigation. Keep it short (1–3 words) so it fits cleanly in the sidebar without wrapping.
+
+```mdx
+---
+title: "Authentication: API Keys and OAuth"
+sidebarTitle: "Authentication"
+---
+```
+
+If `sidebarTitle` is omitted, Mintlify falls back to `title` in the sidebar. For pages with long, descriptive titles, always set a `sidebarTitle`.

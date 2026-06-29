@@ -1,0 +1,122 @@
+---
+title: "Cards, CardGroups, and Callout Components"
+sidebarTitle: "Cards & Callouts"
+description: "Use Mintlify's Card, CardGroup, Note, Tip, Warning, and Info components to highlight navigation, features, and important information in your docs."
+---
+
+Cards create visual navigation grids that help readers jump to key sections of your docs; callouts — `<Note>`, `<Tip>`, `<Warning>`, and `<Info>` — highlight important information inline without breaking the reading flow. Together they are the two most common ways to draw attention to content in Mintlify.
+
+## `<Card>`
+
+A `<Card>` renders a bordered tile with an optional icon, title, and description. When you supply an `href` the entire card becomes a clickable link.
+
+```mdx
+<Card title="Quickstart" icon="rocket" href="/quickstart">
+  Deploy your first docs site in under five minutes.
+</Card>
+```
+
+### Card Props
+
+| Prop | Type | Description |
+|---|---|---|
+| `title` | `string` | Bold heading shown inside the card. |
+| `icon` | `string` | Font Awesome icon name (e.g., `"rocket"`, `"code"`, `"gear"`). |
+| `href` | `string` | URL or path the card links to. |
+| `horizontal` | `boolean` | Renders the icon and title side-by-side instead of stacked. |
+
+The `horizontal` layout is useful for compact reference lists:
+
+```mdx
+<Card title="View on GitHub" icon="github" href="https://github.com/mintlify" horizontal>
+  Browse the source code and open issues.
+</Card>
+```
+
+## `<CardGroup>`
+
+Wrap multiple `<Card>` components in a `<CardGroup>` to display them as a responsive grid. Use the `cols` prop to set the number of columns (default is `2`).
+
+```mdx
+<CardGroup cols={2}>
+  <Card title="Quickstart" icon="rocket" href="/quickstart">
+    Deploy your first docs site in under five minutes.
+  </Card>
+  <Card title="Components" icon="puzzle-piece" href="/components">
+    Explore all MDX components available in Mintlify.
+  </Card>
+  <Card title="API Reference" icon="code" href="/api-reference">
+    Auto-generate API docs from an OpenAPI spec.
+  </Card>
+  <Card title="Custom Styling" icon="palette" href="/styling">
+    Customize colors, fonts, and layout to match your brand.
+  </Card>
+</CardGroup>
+```
+
+On smaller screens `<CardGroup>` automatically collapses to fewer columns, so you don't need to add any responsive overrides yourself.
+
+<Note>
+  Always use `<CardGroup>` when you have more than one card — it handles responsive grid layout automatically. Placing bare `<Card>` components next to each other without a wrapper will stack them vertically.
+</Note>
+
+## Callout Components
+
+Mintlify provides four callout variants. Each renders a coloured banner with an icon and your content inside. Use them sparingly so they retain their impact.
+
+### `<Note>`
+
+Use `<Note>` for general information that supplements the main text — things a reader should be aware of but that aren't urgent.
+
+```mdx
+<Note>
+  This feature is available on the Starter plan and above.
+</Note>
+```
+
+### `<Tip>`
+
+Use `<Tip>` for best practices, helpful shortcuts, or recommendations that improve the experience.
+
+```mdx
+<Tip>
+  Run `mintlify dev` in the root of your docs folder to preview changes locally with hot-reload.
+</Tip>
+```
+
+### `<Warning>`
+
+Use `<Warning>` for breaking changes, destructive actions, or anything the reader must understand before proceeding.
+
+```mdx
+<Warning>
+  Changing your `basePath` after your docs are indexed will break existing links. Update your sitemap and notify users before making this change in production.
+</Warning>
+```
+
+### `<Info>`
+
+Use `<Info>` for neutral, contextual information — version notes, environment-specific behaviour, or background context.
+
+```mdx
+<Info>
+  The `experimental` flag enables preview features that may change before the stable release.
+</Info>
+```
+
+## Icons
+
+The `icon` prop on `<Card>` accepts any [Font Awesome](https://fontawesome.com/icons) icon name in kebab-case. Some commonly used values:
+
+| Icon name | Usage |
+|---|---|
+| `"rocket"` | Getting started, launch |
+| `"code"` | Developer reference, SDK |
+| `"gear"` | Configuration, settings |
+| `"shield"` | Security, authentication |
+| `"book"` | Guides, tutorials |
+| `"puzzle-piece"` | Integrations, plugins |
+| `"terminal"` | CLI, commands |
+| `"webhook"` | Webhooks, events |
+
+You can browse the full icon library at [fontawesome.com/icons](https://fontawesome.com/icons). Use the Free tier names — Mintlify does not require a Font Awesome Pro licence.

@@ -1,0 +1,221 @@
+---
+title: "Pages API — Create and Manage Documentation Pages"
+sidebarTitle: "Pages"
+description: "REST API endpoints for managing Mintlify documentation pages — list all pages, retrieve a single page's metadata, and update page content programmatically."
+---
+
+The Pages API lets you list, retrieve, and update documentation pages in your Mintlify site programmatically — useful for syncing content from external systems or automating updates. All endpoints require a valid API key passed as a bearer token in the `Authorization` header.
+
+---
+
+## `GET /pages`
+
+List all pages in your docs site. Results are returned in reverse chronological order by `updated_at`.
+
+### Query parameters
+
+<ParamField query="limit" type="integer">
+  Maximum number of results to return. Defaults to `20`. Maximum is `100`.
+</ParamField>
+
+<ParamField query="cursor" type="string">
+  Pagination cursor returned by the previous response. Pass this value to retrieve the next page of results.
+</ParamField>
+
+### Example request
+
+<Tabs>
+  <Tab title="curl">
+    ```bash
+    curl https://api.mintlify.com/v1/pages?limit=2 \
+      -H "Authorization: Bearer YOUR_API_KEY"
+    ```
+  </Tab>
+  <Tab title="Python">
+    ```python
+    import requests
+
+    response = requests.get(
+        "https://api.mintlify.com/v1/pages",
+        headers={"Authorization": "Bearer YOUR_API_KEY"},
+        params={"limit": 2}
+    )
+    print(response.json())
+    ```
+  </Tab>
+</Tabs>
+
+### Example response
+
+```json
+{
+  "data": [
+    {
+      "id": "pg_abc123",
+      "slug": "introduction",
+      "title": "Introduction",
+      "updated_at": "2024-01-15T10:30:00Z"
+    },
+    {
+      "id": "pg_def456",
+      "slug": "quickstart",
+      "title": "Quickstart",
+      "updated_at": "2024-01-14T08:00:00Z"
+    }
+  ],
+  "next_cursor": "pg_def456"
+}
+```
+
+### Response fields
+
+<ResponseField name="data" type="array">
+  List of page objects matching your query.
+</ResponseField>
+
+<ResponseField name="data[].id" type="string">
+  Unique identifier for the page.
+</ResponseField>
+
+<ResponseField name="data[].slug" type="string">
+  The URL slug for the page, derived from its file path.
+</ResponseField>
+
+<ResponseField name="data[].title" type="string">
+  The page title as defined in the frontmatter `title` field.
+</ResponseField>
+
+<ResponseField name="data[].updated_at" type="string">
+  ISO 8601 timestamp of when the page was last updated.
+</ResponseField>
+
+<ResponseField name="next_cursor" type="string">
+  Cursor to pass as the `cursor` query parameter to retrieve the next page of results. Returns `null` if there are no more results.
+</ResponseField>
+
+---
+
+## `GET /pages/{id}`
+
+Retrieve a single page by its ID, including the full MDX content of the page.
+
+### Path parameters
+
+<ParamField path="id" type="string" required>
+  The unique identifier of the page to retrieve. You can obtain this from the `GET /pages` list endpoint.
+</ParamField>
+
+### Example request
+
+<Tabs>
+  <Tab title="curl">
+    ```bash
+    curl https://api.mintlify.com/v1/pages/pg_abc123 \
+      -H "Authorization: Bearer YOUR_API_KEY"
+    ```
+  </Tab>
+  <Tab title="Python">
+    ```python
+    import requests
+
+    response = requests.get(
+        "https://api.mintlify.com/v1/pages/pg_abc123",
+        headers={"Authorization": "Bearer YOUR_API_KEY"}
+    )
+    print(response.json())
+    ```
+  </Tab>
+</Tabs>
+
+### Example response
+
+```json
+{
+  "data": {
+    "id": "pg_abc123",
+    "slug": "introduction",
+    "title": "Introduction",
+    "updated_at": "2024-01-15T10:30:00Z",
+    "content": "---\ntitle: \"Introduction\"\ndescription: \"Welcome to our docs.\"\n---\n\nWelcome to the documentation. Get started by reading the [Quickstart](/quickstart)."
+  }
+}
+```
+
+---
+
+## `PUT /pages/{id}`
+
+Update the content of an existing page. The full MDX source you supply replaces the current page content.
+
+### Path parameters
+
+<ParamField path="id" type="string" required>
+  The unique identifier of the page to update.
+</ParamField>
+
+### Body parameters
+
+<ParamField body="content" type="string" required>
+  The full MDX content of the page, including frontmatter. This replaces the existing page content entirely.
+</ParamField>
+
+<ParamField body="title" type="string">
+  An updated title for the page. If omitted, the title is read from the frontmatter in `content`. Providing it here overrides the frontmatter value in the dashboard index.
+</ParamField>
+
+### Example request
+
+<Tabs>
+  <Tab title="curl">
+    ```bash
+    curl -X PUT https://api.mintlify.com/v1/pages/pg_abc123 \
+      -H "Authorization: Bearer YOUR_API_KEY" \
+      -H "Content-Type: application/json" \
+      -d '{
+        "title": "Getting Started",
+        "content": "---\ntitle: \"Getting Started\"\ndescription: \"Up and running in minutes.\"\n---\n\nFollow these steps to get started with Mintlify."
+      }'
+    ```
+  </Tab>
+  <Tab title="Python">
+    ```python
+    import requests
+
+    payload = {
+        "title": "Getting Started",
+        "content": (
+            '---\ntitle: "Getting Started"\n'
+            'description: "Up and running in minutes."\n---\n\n'
+            "Follow these steps to get started with Mintlify."
+        )
+    }
+
+    response = requests.put(
+        "https://api.mintlify.com/v1/pages/pg_abc123",
+        headers={
+            "Authorization": "Bearer YOUR_API_KEY",
+            "Content-Type": "application/json"
+        },
+        json=payload
+    )
+    print(response.json())
+    ```
+  </Tab>
+</Tabs>
+
+### Example response
+
+```json
+{
+  "data": {
+    "id": "pg_abc123",
+    "slug": "introduction",
+    "title": "Getting Started",
+    "updated_at": "2024-01-16T09:15:00Z"
+  }
+}
+```
+
+<Note>
+  Updating page content via the API queues a deployment automatically. You don't need to call `POST /deployments` separately — your changes will go live as part of the next build.
+</Note>

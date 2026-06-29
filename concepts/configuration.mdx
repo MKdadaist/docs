@@ -1,0 +1,167 @@
+---
+title: "Configuring Your Mintlify Docs Site"
+sidebarTitle: "Configuration"
+description: "The docs.json file is the single source of truth for your Mintlify site — covering theme, colors, navigation, logo, navbar, and footer settings."
+---
+
+All site-wide settings for your Mintlify docs live in a single `docs.json` file at the root of your repository. This file controls everything from your site's name and color palette to which pages appear in the sidebar and in what order. Whenever you push a change to `docs.json` on your default branch, Mintlify picks it up and redeploys your site automatically.
+
+## Required Fields
+
+A minimal `docs.json` needs just a few fields to produce a working site:
+
+```json
+{
+  "$schema": "https://mintlify.com/docs.json",
+  "name": "Acme Docs",
+  "theme": "luma",
+  "colors": {
+    "primary": "#0D9373"
+  },
+  "navigation": [
+    {
+      "tab": "Docs",
+      "groups": [
+        {
+          "group": "Getting Started",
+          "pages": ["introduction", "quickstart"]
+        }
+      ]
+    }
+  ]
+}
+```
+
+| Field | Required | Description |
+|---|---|---|
+| `$schema` | Recommended | Enables editor autocomplete and validation |
+| `name` | ✅ | Your site's display name, shown in the navbar and browser tab |
+| `theme` | ✅ | The visual theme applied to the entire site |
+| `colors.primary` | ✅ | Brand color used for buttons, links, and interactive accents |
+| `navigation` | ✅ | Ordered list of tabs, groups, and pages that build the sidebar |
+
+---
+
+## Theme
+
+The `theme` field sets the overall visual style of your site. Mintlify offers seven built-in themes:
+
+| Theme | Character |
+|---|---|
+| `luma` | Clean and minimal — a bright, open layout with generous whitespace |
+| `willow` | Soft and organic — subtle warm tones with rounded visual details |
+| `palm` | Modern and bold — high contrast with strong typographic hierarchy |
+| `almond` | Warm and neutral — a muted palette that keeps focus on content |
+| `aspen` | Crisp and airy — light backgrounds with cool-toned accents |
+| `maple` | Rich and grounded — deeper tones for a more editorial feel |
+| `sequoia` | Dark and sophisticated — a dark-first layout with refined contrast |
+
+```json
+{
+  "theme": "maple"
+}
+```
+
+---
+
+## Colors
+
+The `colors` object lets you tailor the accent palette to match your brand. All values are hex color codes.
+
+```json
+{
+  "colors": {
+    "primary": "#0D9373",
+    "light": "#07C983",
+    "dark": "#0A7B5E"
+  }
+}
+```
+
+| Key | When it applies |
+|---|---|
+| `primary` | Default accent color — used in both light and dark mode if the others aren't set |
+| `light` | Accent color used in **light mode** |
+| `dark` | Accent color used in **dark mode** |
+
+These colors affect interactive elements across the entire site: CTA buttons, hyperlinks, active sidebar items, inline code highlights, and the horizontal rule above the footer.
+
+---
+
+## Logo & Favicon
+
+Set your logo and favicon under the `logo` key. Mintlify supports separate assets for light and dark mode so your logo always looks crisp regardless of the reader's system preference.
+
+```json
+{
+  "logo": {
+    "light": "/logo/light.svg",
+    "dark": "/logo/dark.svg",
+    "href": "https://acme.com"
+  },
+  "favicon": "/favicon.svg"
+}
+```
+
+| Key | Description |
+|---|---|
+| `logo.light` | Path to the logo shown in light mode |
+| `logo.dark` | Path to the logo shown in dark mode |
+| `logo.href` | Optional URL the logo links to when clicked |
+| `favicon` | Path to the favicon file (`.svg`, `.png`, or `.ico`) |
+
+Logo files should live in a `public/` or top-level folder in your repo. Reference them with a leading slash from the repo root.
+
+---
+
+## Navbar
+
+The `navbar` object controls the action buttons and links that appear in the top navigation bar.
+
+```json
+{
+  "navbar": {
+    "primary": {
+      "type": "button",
+      "label": "Get Started",
+      "href": "https://dashboard.acme.com/signup"
+    },
+    "links": [
+      {
+        "label": "GitHub",
+        "href": "https://github.com/acme/acme"
+      }
+    ]
+  }
+}
+```
+
+- **`navbar.primary`** — A prominent call-to-action rendered as either a `"button"` (filled style) or a `"link"` (plain text style) in the top-right of the navbar.
+- **`navbar.links`** — An array of secondary links rendered as plain text next to the primary action.
+
+---
+
+## Footer
+
+Add social and resource links to the site footer using the `footer` object:
+
+```json
+{
+  "footer": {
+    "socials": {
+      "github": "https://github.com/acme",
+      "x": "https://x.com/acme",
+      "linkedin": "https://linkedin.com/company/acme",
+      "website": "https://acme.com"
+    }
+  }
+}
+```
+
+Mintlify renders recognized social keys (`github`, `x`, `linkedin`, `discord`, `slack`, `youtube`, `website`, and more) as icon buttons in the footer automatically.
+
+---
+
+<Tip>
+  Changes to `docs.json` deploy automatically when pushed to your default branch. Run `mintlify dev` in your repo root to preview configuration changes locally before pushing.
+</Tip>

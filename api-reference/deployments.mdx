@@ -1,0 +1,197 @@
+---
+title: "Deployments API — Trigger and Monitor Site Builds"
+sidebarTitle: "Deployments"
+description: "REST API endpoints for Mintlify deployments — trigger a new build, list recent deployments, and check deployment status programmatically."
+---
+
+The Deployments API lets you trigger and monitor builds of your Mintlify docs site. Use it to integrate deployments into your CI/CD pipeline or to programmatically rebuild after syncing content from an external system. All endpoints require a valid API key in the `Authorization` header.
+
+<Tip>
+  For most teams, pushes to your default branch deploy automatically via the GitHub App — you don't need to call this API manually. Use it when you need programmatic control over when deployments happen, such as after a batch content sync or from a custom release workflow.
+</Tip>
+
+---
+
+## `POST /deployments`
+
+Trigger a new deployment of your docs site. By default, Mintlify deploys the latest commit on your default branch. Pass a `ref` in the request body to deploy a specific branch or commit.
+
+### Body parameters
+
+<ParamField body="ref" type="string">
+  The git branch name or commit SHA to deploy. Defaults to your repository's default branch (e.g., `main`) if omitted.
+</ParamField>
+
+### Example request
+
+```bash
+curl -X POST https://api.mintlify.com/v1/deployments \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"ref": "main"}'
+```
+
+### Example response
+
+```json
+{
+  "data": {
+    "id": "dep_xyz789",
+    "status": "queued",
+    "ref": "main",
+    "created_at": "2024-01-15T12:00:00Z"
+  }
+}
+```
+
+### Response fields
+
+<ResponseField name="data.id" type="string">
+  Unique identifier for the deployment. Use this to check status with `GET /deployments/{id}`.
+</ResponseField>
+
+<ResponseField name="data.status" type="string">
+  Current status of the deployment. One of `queued`, `building`, `succeeded`, or `failed`.
+</ResponseField>
+
+<ResponseField name="data.ref" type="string">
+  The git branch or commit SHA being deployed.
+</ResponseField>
+
+<ResponseField name="data.created_at" type="string">
+  ISO 8601 timestamp of when the deployment was created.
+</ResponseField>
+
+---
+
+## `GET /deployments`
+
+List your most recent deployments, ordered from newest to oldest.
+
+### Query parameters
+
+<ParamField query="limit" type="integer">
+  Maximum number of results to return. Defaults to `20`. Maximum is `100`.
+</ParamField>
+
+<ParamField query="cursor" type="string">
+  Pagination cursor returned by the previous response. Pass this to retrieve the next page of results.
+</ParamField>
+
+### Example request
+
+```bash
+curl https://api.mintlify.com/v1/deployments \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+### Example response
+
+```json
+{
+  "data": [
+    {
+      "id": "dep_xyz789",
+      "status": "succeeded",
+      "ref": "main",
+      "created_at": "2024-01-15T12:00:00Z",
+      "completed_at": "2024-01-15T12:01:45Z"
+    },
+    {
+      "id": "dep_uvw456",
+      "status": "failed",
+      "ref": "feature/new-guides",
+      "created_at": "2024-01-14T17:30:00Z",
+      "completed_at": "2024-01-14T17:30:58Z",
+      "error": "Build failed: unresolved component <CustomCard> in quickstart.mdx"
+    },
+    {
+      "id": "dep_rst123",
+      "status": "building",
+      "ref": "main",
+      "created_at": "2024-01-13T09:00:00Z",
+      "completed_at": null
+    }
+  ],
+  "next_cursor": "dep_rst123"
+}
+```
+
+---
+
+## `GET /deployments/{id}`
+
+Check the current status of a specific deployment. Poll this endpoint to track a deployment triggered by `POST /deployments`.
+
+### Path parameters
+
+<ParamField path="id" type="string" required>
+  The unique identifier of the deployment to retrieve.
+</ParamField>
+
+### Example request
+
+```bash
+curl https://api.mintlify.com/v1/deployments/dep_xyz789 \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+### Example response
+
+```json
+{
+  "data": {
+    "id": "dep_xyz789",
+    "status": "succeeded",
+    "ref": "main",
+    "created_at": "2024-01-15T12:00:00Z",
+    "completed_at": "2024-01-15T12:01:45Z",
+    "error": null
+  }
+}
+```
+
+### Response fields
+
+<ResponseField name="data.id" type="string">
+  Unique identifier for the deployment.
+</ResponseField>
+
+<ResponseField name="data.status" type="string">
+  Current status of the deployment. One of `queued`, `building`, `succeeded`, or `failed`.
+</ResponseField>
+
+<ResponseField name="data.ref" type="string">
+  The git branch or commit SHA that was deployed.
+</ResponseField>
+
+<ResponseField name="data.created_at" type="string">
+  ISO 8601 timestamp of when the deployment was created.
+</ResponseField>
+
+<ResponseField name="data.completed_at" type="string">
+  ISO 8601 timestamp of when the deployment finished. Returns `null` if the deployment is still in progress.
+</ResponseField>
+
+<ResponseField name="data.error" type="string">
+  A description of what went wrong if the deployment `status` is `failed`. Returns `null` for successful deployments.
+</ResponseField>
+
+---
+
+## Deployment statuses
+
+<AccordionGroup>
+  <Accordion title="queued" icon="clock">
+    The deployment has been accepted and is waiting to be picked up by the build system. This is the initial status returned by `POST /deployments`.
+  </Accordion>
+  <Accordion title="building" icon="hammer">
+    The deployment is actively being built. Mintlify is fetching your content, compiling MDX, and generating the static site.
+  </Accordion>
+  <Accordion title="succeeded" icon="circle-check">
+    The deployment completed successfully and your docs site has been updated. The `completed_at` timestamp reflects when the site went live.
+  </Accordion>
+  <Accordion title="failed" icon="circle-xmark">
+    The build encountered an error and the deployment did not complete. Check the `error` field in the deployment object for a description of what went wrong — common causes include invalid MDX syntax or unresolved component references.
+  </Accordion>
+</AccordionGroup>

@@ -1,0 +1,185 @@
+---
+title: "docs.json Reference: Full Configuration Schema"
+sidebarTitle: "docs.json"
+description: "Complete reference for the docs.json configuration file — every top-level field, navigation options, branding settings, and navbar configuration explained."
+---
+
+`docs.json` is the single configuration file for your Mintlify site. It lives at the root of your repository and controls everything from the site name and theme to navigation structure, branding, and navbar links. Every change you make here is reflected across your entire docs site — no code required.
+
+## Schema
+
+The following example shows a complete `docs.json` with all major fields populated. You can use it as a starting point and remove any fields you don't need.
+
+```json docs.json
+{
+  "$schema": "https://mintlify.com/docs.json",
+  "theme": "luma",
+  "name": "My Product",
+  "colors": {
+    "primary": "#ef7025",
+    "light": "#eec9bc",
+    "dark": "#4fa1ab"
+  },
+  "favicon": "/favicon.svg",
+  "logo": {
+    "light": "/logo/light.svg",
+    "dark": "/logo/dark.svg"
+  },
+  "navbar": {
+    "links": [{ "label": "Support", "href": "mailto:support@example.com" }],
+    "primary": { "type": "button", "label": "Dashboard", "href": "https://app.example.com" }
+  },
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "Documentation",
+        "groups": [
+          { "group": "Get Started", "pages": ["introduction", "quickstart"] }
+        ]
+      }
+    ]
+  },
+  "footer": {
+    "socials": {
+      "x": "https://x.com/yourproduct",
+      "github": "https://github.com/yourorg/yourrepo"
+    }
+  }
+}
+```
+
+<Tip>
+  Add `"$schema": "https://mintlify.com/docs.json"` to get autocomplete in VS Code and other JSON-aware editors.
+</Tip>
+
+## Field reference
+
+### `$schema`
+
+<ParamField path="$schema" type="string">
+  The JSON Schema URL for `docs.json`. Set this to `"https://mintlify.com/docs.json"` to enable inline validation, autocomplete, and hover documentation in VS Code and any other editor that supports JSON Schema. This field has no effect on your published site.
+</ParamField>
+
+### `theme`
+
+<ParamField path="theme" type="string" required>
+  The name of the visual theme for your site. Mintlify offers several built-in themes: `luma`, `willow`, `palm`, `almond`, `aspen`, `maple`, and `sequoia`. Each theme ships with its own typography, spacing, and component styles. See [Branding](/configuration/branding) for a full theme comparison.
+</ParamField>
+
+### `name`
+
+<ParamField path="name" type="string" required>
+  The display name of your documentation site. This appears in the browser tab title, the site navbar (when no logo is set), and in social share previews. Use your product or company name.
+
+  ```json
+  "name": "My Product"
+  ```
+</ParamField>
+
+### `colors`
+
+<ParamField path="colors" type="object">
+  An object that defines your site's brand color palette. These values control the color of interactive elements like buttons, links, and hover states throughout the site.
+
+  <ParamField path="colors.primary" type="string" required>
+    The primary brand color as a hex value (e.g., `"#ef7025"`). Mintlify uses this color for buttons, active sidebar links, and inline hyperlinks. Choose the color that best represents your brand.
+  </ParamField>
+
+  <ParamField path="colors.light" type="string">
+    An accent color used in light mode as a hex value. If omitted, Mintlify derives a lighter tint from `primary`. Use this to fine-tune how your brand color reads against a white background.
+  </ParamField>
+
+  <ParamField path="colors.dark" type="string">
+    An accent color used in dark mode as a hex value. If omitted, Mintlify derives a darker shade from `primary`. Use this to ensure sufficient contrast when your site is viewed in dark mode.
+  </ParamField>
+</ParamField>
+
+### `favicon`
+
+<ParamField path="favicon" type="string">
+  The path or URL to your site's favicon. Accepts SVG, PNG, ICO, and WebP formats. Paths are relative to the root of your docs repository.
+
+  ```json
+  "favicon": "/favicon.svg"
+  ```
+
+  Recommended: an SVG or a 32×32 PNG for crisp rendering across all browsers and devices.
+</ParamField>
+
+### `logo`
+
+<ParamField path="logo" type="object">
+  An object containing paths or URLs to your logo images. Mintlify swaps between the two variants automatically based on the active color scheme.
+
+  <ParamField path="logo.light" type="string">
+    Path or URL to the logo shown when **dark mode** is active. Use a light-colored or white version of your logo so it remains legible against dark backgrounds.
+  </ParamField>
+
+  <ParamField path="logo.dark" type="string">
+    Path or URL to the logo shown when **light mode** is active. Use your full-color or dark-colored logo here.
+  </ParamField>
+
+  ```json
+  "logo": {
+    "light": "/logo/light.svg",
+    "dark": "/logo/dark.svg"
+  }
+  ```
+</ParamField>
+
+### `navbar`
+
+<ParamField path="navbar" type="object">
+  Controls the top navigation bar of your site.
+
+  <ParamField path="navbar.primary" type="object">
+    The primary call-to-action element displayed prominently in the navbar — typically a button that links to your app or sign-up page.
+
+    | Property | Type   | Description                              |
+    | -------- | ------ | ---------------------------------------- |
+    | `type`   | string | `"button"` or `"link"`                   |
+    | `label`  | string | The visible text label                   |
+    | `href`   | string | The destination URL (internal or external) |
+
+    ```json
+    "primary": { "type": "button", "label": "Dashboard", "href": "https://app.example.com" }
+    ```
+  </ParamField>
+
+  <ParamField path="navbar.links" type="array">
+    An array of secondary link objects rendered in the navbar alongside the primary CTA. Each link object accepts a `label` (string) and an `href` (string).
+
+    ```json
+    "links": [
+      { "label": "Support", "href": "mailto:support@example.com" },
+      { "label": "Blog", "href": "https://blog.example.com" }
+    ]
+    ```
+  </ParamField>
+</ParamField>
+
+### `navigation`
+
+<ParamField path="navigation" type="object">
+  Defines the full sidebar navigation structure of your site. You can organize pages into flat groups (for single-section sites) or into tabs with groups underneath (for multi-section sites). See [Navigation](/configuration/navigation) for a complete guide with examples.
+</ParamField>
+
+### `footer`
+
+<ParamField path="footer" type="object">
+  Controls the site footer.
+
+  <ParamField path="footer.socials" type="object">
+    An object of social network shortcut keys mapped to profile or page URLs. Mintlify renders the corresponding icon for each key automatically.
+
+    Supported keys: `x`, `github`, `linkedin`, `discord`, `slack`, `youtube`, `instagram`, `facebook`, `threads`, `twitch`, `website`.
+
+    ```json
+    "socials": {
+      "x": "https://x.com/yourproduct",
+      "github": "https://github.com/yourorg/yourrepo",
+      "linkedin": "https://linkedin.com/company/yourcompany"
+    }
+    ```
+  </ParamField>
+</ParamField>

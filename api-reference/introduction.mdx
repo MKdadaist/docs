@@ -1,0 +1,63 @@
+---
+title: "Mintlify API Reference Overview"
+sidebarTitle: "Overview"
+description: "The Mintlify API lets you programmatically manage your docs site — trigger deployments, update pages, and retrieve site metadata from your own tooling."
+---
+
+The Mintlify API gives you programmatic access to your docs site. You can trigger deployments, manage pages, and integrate Mintlify into your CI/CD pipeline or custom tooling.
+
+## Base URL
+
+All API requests are made to the following base URL:
+
+```
+https://api.mintlify.com/v1
+```
+
+## Response format
+
+All responses are JSON. Successful responses return a `data` object containing the requested resource or operation result. If something goes wrong, the response includes an `error` object with a `message` field describing what happened.
+
+```json
+// Success
+{
+  "data": { ... }
+}
+
+// Error
+{
+  "error": {
+    "code": "not_found",
+    "message": "The requested resource could not be found."
+  }
+}
+```
+
+## Rate limits
+
+Standard rate limits apply to all endpoints. If your requests exceed the allowed rate, the API returns HTTP `429 Too Many Requests`. Back off and retry after a short delay before making further requests.
+
+## Pagination
+
+List endpoints support cursor-based pagination via two query parameters:
+
+| Parameter | Type    | Default | Description                                      |
+|-----------|---------|---------|--------------------------------------------------|
+| `limit`   | integer | `20`    | Maximum number of results to return. Max is `100`. |
+| `cursor`  | string  | —       | Pagination cursor returned by the previous response. |
+
+When there are more results available, the response includes a `next_cursor` value. Pass that value as the `cursor` parameter on your next request to fetch the following page. A `null` value for `next_cursor` means you have reached the last page.
+
+## Explore the API
+
+<CardGroup cols={2}>
+  <Card title="Authentication" href="/api-reference/authentication" icon="key">
+    How to get and use your API key to authenticate every request.
+  </Card>
+  <Card title="Pages" href="/api-reference/pages" icon="file">
+    Create, read, update, and delete documentation pages programmatically.
+  </Card>
+  <Card title="Deployments" href="/api-reference/deployments" icon="rocket">
+    Trigger and monitor deployments of your Mintlify docs site.
+  </Card>
+</CardGroup>

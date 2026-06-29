@@ -1,0 +1,146 @@
+---
+title: "Customize Branding, Colors, and Theme in Mintlify"
+sidebarTitle: "Branding"
+description: "Apply your brand colors, logo, favicon, and theme to your Mintlify docs site using the docs.json configuration file."
+---
+
+Mintlify makes it easy to match your docs site to your product's brand. You set your colors, logo, favicon, and theme in `docs.json` — changes deploy automatically when you push. There's no separate admin panel to log into and no CSS files to manage; all branding configuration lives in a single, version-controlled file alongside your content.
+
+## Choosing a theme
+
+Themes control the overall visual style and layout of your docs site — typography, spacing, sidebar behavior, and component aesthetics. Pick the one that best fits your product's personality.
+
+| Theme | Best for |
+|---|---|
+| `luma` | Sleek, minimal — great for developer-focused API products |
+| `willow` | Clean, elegant — great for design-focused products |
+| `palm` | Spacious, airy — great for developer documentation |
+| `almond` | Soft, approachable — great for consumer-facing products |
+| `aspen` | Bold, technical — great for infrastructure and DevOps tooling |
+| `maple` | Warm, sidebar-focused — great for large doc sets |
+| `sequoia` | Dense, information-rich — great for API-heavy products |
+
+Set your theme in `docs.json`:
+
+```json docs.json
+{
+  "theme": "luma"
+}
+```
+
+## Colors
+
+Your primary color is used for links, active navigation items, buttons, and other accent elements throughout your site. You can set separate values for light mode and dark mode to ensure good contrast in both.
+
+```json docs.json
+{
+  "colors": {
+    "primary": "#0D9373",
+    "light": "#07C983",
+    "dark": "#0A7A5A"
+  }
+}
+```
+
+| Field | Purpose |
+|---|---|
+| `primary` | Main accent color — used for buttons, links, and highlights |
+| `light` | Lighter tint used in light mode contexts |
+| `dark` | Darker shade used in dark mode contexts |
+
+Use a hex color from your brand palette. If you're unsure where to start, pull the primary action color from your product's UI — it will create a cohesive feeling between your app and your docs.
+
+## Logo
+
+Set separate logos for light and dark mode so your wordmark looks correct against both backgrounds. Provide a URL or a path relative to the root of your repository.
+
+```json docs.json
+{
+  "logo": {
+    "light": "/logo/light.svg",
+    "dark": "/logo/dark.svg",
+    "href": "https://yourproduct.com"
+  }
+}
+```
+
+The `href` field makes your logo a link back to your main marketing site — standard practice for docs.
+
+**Recommended dimensions:** a horizontal lockup at roughly 200×50px works well at the sizes Mintlify renders the logo. SVG is preferred because it scales cleanly at any resolution.
+
+## Favicon
+
+Set your favicon to a `.svg`, `.png`, or `.ico` file. SVG is recommended for sharpness at small sizes.
+
+```json docs.json
+{
+  "favicon": "/favicon.svg"
+}
+```
+
+Place the file in the root of your repository (or in a `/public` folder if you prefer) and reference it by path.
+
+## Navbar customization
+
+The navbar supports a primary action button and secondary links. Use the primary button to link to your app, dashboard, or sign-up page — it's the highest-visibility call to action on your docs site.
+
+```json docs.json
+{
+  "navbar": {
+    "primary": {
+      "type": "button",
+      "label": "Get Started",
+      "href": "https://app.yourproduct.com/signup"
+    },
+    "links": [
+      {
+        "label": "GitHub",
+        "href": "https://github.com/yourorg/yourrepo"
+      },
+      {
+        "label": "Status",
+        "href": "https://status.yourproduct.com"
+      }
+    ]
+  }
+}
+```
+
+## Full branding example
+
+Here's a complete `docs.json` snippet combining all branding fields. You can copy this as a starting point and replace the values with your own.
+
+```json docs.json
+{
+  "name": "Your Product",
+  "theme": "luma",
+  "colors": {
+    "primary": "#0D9373",
+    "light": "#07C983",
+    "dark": "#0A7A5A"
+  },
+  "logo": {
+    "light": "/logo/light.svg",
+    "dark": "/logo/dark.svg",
+    "href": "https://yourproduct.com"
+  },
+  "favicon": "/favicon.svg",
+  "navbar": {
+    "primary": {
+      "type": "button",
+      "label": "Get Started",
+      "href": "https://app.yourproduct.com/signup"
+    },
+    "links": [
+      {
+        "label": "GitHub",
+        "href": "https://github.com/yourorg/yourrepo"
+      }
+    ]
+  }
+}
+```
+
+<Tip>
+  Use `mint dev` to preview your branding changes locally before deploying. The local server hot-reloads when you save `docs.json`, so you can tune colors and layout in real time without pushing a commit for every adjustment.
+</Tip>

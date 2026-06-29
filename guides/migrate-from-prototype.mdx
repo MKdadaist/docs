@@ -1,0 +1,232 @@
+---
+title: "Migrate a Working Prototype to Mintlify Docs"
+sidebarTitle: "Prototype Migration"
+description: "Turn your working prototype — Python services, rough Markdown files, or scattered notes — into structured Mintlify documentation with two practical approaches."
+---
+
+If you have a working prototype with Python services (or any other stack) and want to graduate it to proper documentation, you have two options: migrate page by page manually, or use an AI-assisted workflow to batch-convert your existing content. Both approaches produce the same result — a clean Mintlify docs site. The right choice depends on how much content you have and how much control you want over the process.
+
+## Choose your approach
+
+<CardGroup cols={2}>
+  <Card title="Manual — Page by Page" icon="pen-to-square">
+    Best when you want full control and are redesigning as you go. You write each page yourself, using Mintlify components where they fit naturally.
+  </Card>
+  <Card title="AI-Assisted — Batch Migration" icon="wand-magic-sparkles">
+    Best when you have lots of existing content to convert quickly. An AI assistant reads your prototype files and generates structured MDX pages.
+  </Card>
+</CardGroup>
+
+## What to document
+
+For a prototype with Python services, focus on what your users actually need — not how your system works internally. A good rule of thumb: document what a developer needs to know to make their first successful API call, and everything they need after that.
+
+Focus on:
+
+- **Public API endpoints** — what they accept and what they return
+- **How to authenticate** — API keys, OAuth, or whatever your service uses
+- **How to get started** — a step-by-step quickstart that ends with a real result
+- **Key concepts** — terms or models the user needs to understand before diving in
+- **Common workflows** — the two or three tasks users will do most often
+
+<Note>
+  Avoid documenting internals. Skip database schemas, deployment scripts, and service-to-service communication — those belong in internal runbooks, not user-facing docs.
+</Note>
+
+## Manual migration
+
+The manual approach works well when your prototype is small (under 20 pages worth of content), or when you want to rethink the structure and tone as you write. You work through pages one at a time, starting from the user's perspective.
+
+<Steps>
+  <Step title="Audit your content">
+    List every page you need before writing a single one. For an API project, that typically means: an introduction, a quickstart, an authentication page, one page per major endpoint group, and a few concept pages. A simple text file or spreadsheet works fine — the goal is to know your full scope before you start creating files.
+  </Step>
+
+  <Step title="Define navigation">
+    Open `docs.json` and map your pages into groups before creating the files. Having the structure defined first keeps you oriented. A typical API project might look like this:
+
+    ```json docs.json
+    {
+      "navigation": {
+        "tabs": [
+          {
+            "tab": "Documentation",
+            "groups": [
+              {
+                "group": "Get Started",
+                "pages": ["introduction", "quickstart", "authentication"]
+              },
+              {
+                "group": "Guides",
+                "pages": ["guides/first-request", "guides/pagination", "guides/error-handling"]
+              }
+            ]
+          },
+          {
+            "tab": "API Reference",
+            "groups": [
+              {
+                "group": "Endpoints",
+                "pages": [
+                  "api-reference/users",
+                  "api-reference/orders",
+                  "api-reference/webhooks"
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    }
+    ```
+  </Step>
+
+  <Step title="Create pages one by one">
+    For each page, create an `.mdx` file, add frontmatter (`title`, `description`), and write the content using Mintlify components. Start with `introduction.mdx` and `quickstart.mdx` — these two pages anchor everything else and will clarify what the rest of the site needs to cover.
+
+    ```mdx introduction.mdx
+    ---
+    title: "Introduction"
+    description: "What your service does and who it's for."
+    ---
+
+    One paragraph overview of your service. What problem does it solve?
+    Who uses it? What can they do with it?
+    ```
+  </Step>
+
+  <Step title="Document your API endpoints">
+    For each Python endpoint, create a page in `api-reference/`. Use `<ParamField>` to describe request inputs and `<ResponseField>` to describe outputs. Be explicit about types, required vs. optional fields, and example values.
+
+    ```mdx api-reference/users.mdx
+    ---
+    title: "Users"
+    description: "Create, retrieve, and manage user records."
+    ---
+
+    ## Get a user
+
+    Retrieve a single user by their ID.
+
+    ### Request
+
+    <ParamField path="id" type="string" required>
+      The unique identifier for the user.
+    </ParamField>
+
+    ### Response
+
+    <ResponseField name="id" type="string">
+      The user's unique identifier.
+    </ResponseField>
+
+    <ResponseField name="email" type="string">
+      The user's email address.
+    </ResponseField>
+
+    <ResponseField name="created_at" type="string">
+      ISO 8601 timestamp of when the user was created.
+    </ResponseField>
+    ```
+  </Step>
+
+  <Step title="Test locally">
+    Run `mint dev` after creating or editing each page. This starts a local preview server so you can see exactly how each page renders — including component layout, code highlighting, and navigation — before you commit.
+
+    ```bash
+    mint dev
+    ```
+  </Step>
+
+  <Step title="Push to deploy">
+    When you're satisfied with a page or a batch of pages, commit and push to your connected repository. Mintlify picks up the changes automatically and deploys them.
+
+    ```bash
+    git add .
+    git commit -m "docs: add API reference and quickstart"
+    git push
+    ```
+  </Step>
+</Steps>
+
+## AI-assisted migration
+
+The AI-assisted approach is faster when you have substantial existing content — Python files with docstrings, a README, existing Markdown files, or even just well-commented code. You give an AI assistant the raw material and it generates structured Mintlify MDX files that you then review and refine.
+
+<Steps>
+  <Step title="Install the Mintlify skill">
+    Run the following command in your terminal to install the Mintlify documentation skill. This teaches your AI assistant about every Mintlify component, the `docs.json` schema, writing conventions, and common patterns.
+
+    ```bash
+    npx skills add https://mintlify.com/docs
+    ```
+  </Step>
+
+  <Step title="Open your AI coding assistant">
+    The Mintlify skill works with Claude Code, Cursor, Windsurf, and ChatGPT. Open whichever tool you use day-to-day — no extra configuration is needed after installing the skill.
+  </Step>
+
+  <Step title="Give the AI context">
+    Point the AI at your prototype files. The more context you provide, the better the output. Useful inputs include:
+
+    - Your Python service files (especially route definitions and function signatures)
+    - An existing README or architecture notes
+    - Annotated code with docstrings describing parameters and return values
+    - Any rough Markdown notes you've already written
+  </Step>
+
+  <Step title="Prompt the AI">
+    Use this prompt as a starting point. Paste your Python files or a description of your endpoints at the bottom.
+
+    ```
+    I have a Python service prototype with the following endpoints and structure.
+    Please convert this into Mintlify documentation:
+    - Create an introduction.mdx with an overview
+    - Create a quickstart.mdx showing how to make the first API call
+    - Create an api-reference/ folder with one page per endpoint
+    - Use ParamField and ResponseField components for request/response shapes
+    - Generate a docs.json with navigation covering all pages
+
+    Here is my code: [paste your Python files or describe the endpoints]
+    ```
+  </Step>
+
+  <Step title="Review and refine">
+    The AI generates `.mdx` files for each page. Go through each one and check:
+
+    - Endpoint signatures match your actual code
+    - Parameter names, types, and required/optional status are correct
+    - Response shapes are accurate and complete
+    - Tone is appropriate for your audience
+    - Nothing internal has leaked into user-facing descriptions
+  </Step>
+
+  <Step title="Run validation">
+    Before deploying, run Mintlify's built-in validation tools to catch broken links and config issues:
+
+    ```bash
+    mint validate
+    mint broken-links
+    ```
+
+    Fix any errors before pushing.
+  </Step>
+
+  <Step title="Deploy">
+    Push your generated and reviewed pages to your repository. Mintlify deploys automatically.
+
+    ```bash
+    git add .
+    git commit -m "docs: initial migration from prototype"
+    git push
+    ```
+  </Step>
+</Steps>
+
+<Tip>
+  The AI workflow is especially powerful if you have a README, existing API docs, or annotated Python code. The richer the context you give it, the better the output — and the less you'll need to correct afterward.
+</Tip>
+
+<Warning>
+  AI-generated docs should always be reviewed for accuracy. Verify that endpoint signatures, parameter names, and response shapes match your actual code before publishing. Users will trust your documentation — make sure it's correct.
+</Warning>
