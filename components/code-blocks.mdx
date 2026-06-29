@@ -1,5 +1,5 @@
 ---
-title: "Code Blocks and CodeGroup in Mintlify"
+title: "Code Blocks and CodeGroup Components in Mintlify Docs"
 sidebarTitle: "Code Blocks"
 description: "Add syntax-highlighted code blocks, line numbers, diff markers, and multi-language CodeGroup tabs to your Mintlify documentation pages."
 ---
@@ -32,21 +32,7 @@ mintlify dev
 
 ## Adding a File Name (Title)
 
-Place a filename string after the language tag to display it as a title tab above the code block:
-
-````mdx
-```python app.py
-from flask import Flask
-
-app = Flask(__name__)
-
-@app.route("/")
-def index():
-    return "Hello, world!"
-```
-````
-
-This renders as:
+Place a filename string after the language tag to display it as a title tab above the code block — for example, opening with ` ```python app.py ` renders the tab label "app.py":
 
 ```python app.py
 from flask import Flask
@@ -60,9 +46,8 @@ def index():
 
 ## Line Numbers
 
-Add the `lines` meta option to display line numbers on the left-hand side:
+Add the `lines` meta option after the language tag (e.g., ` ```python lines `) to display line numbers on the left-hand side:
 
-````mdx
 ```python lines
 def fibonacci(n):
     if n <= 1:
@@ -71,13 +56,11 @@ def fibonacci(n):
 
 print(fibonacci(10))
 ```
-````
 
 ## Highlighting Lines
 
-Use the `highlight` meta option with a comma-separated list of line numbers or ranges to visually emphasise specific lines:
+Use the `highlight` meta option with a comma-separated list of line numbers or ranges to visually emphasise specific lines — for example, ` ```python highlight={1,3-5} ` highlights line 1 and lines 3 through 5:
 
-````mdx
 ```python highlight={1,3-5}
 import os
 
@@ -87,7 +70,6 @@ LOG_DIR  = os.path.join(BASE_DIR, "logs")
 
 print(BASE_DIR)
 ```
-````
 
 ## Diff Markers
 
@@ -140,9 +122,8 @@ The tab label is taken from the text that follows the language identifier — yo
 
 ## Collapsing Long Code Blocks
 
-Add the `expandable` meta option to collapse long code blocks behind a "Show more" toggle. This keeps your page readable when you need to include lengthy configuration files or full output examples:
+Add the `expandable` meta option after the language tag (e.g., ` ```yaml expandable `) to collapse long code blocks behind a "Show more" toggle. This keeps your page readable when you need to include lengthy configuration files or full output examples:
 
-````mdx
 ```yaml expandable
 version: "3.9"
 services:
@@ -165,7 +146,6 @@ services:
 volumes:
   postgres_data:
 ```
-````
 
 <Tip>
   Always include a language tag for syntax highlighting. Use `text` or `plaintext` for terminal output or unformatted content where you don't want highlighting applied.

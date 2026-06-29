@@ -1,7 +1,7 @@
 ---
 title: "Navigation Configuration: Tabs, Groups, and Pages"
 sidebarTitle: "Navigation"
-description: "Configure sidebar navigation in docs.json using tabs, groups, and page lists — control the order, hierarchy, and labeling of every page in your Mintlify site."
+description: "Configure sidebar navigation in docs.json using tabs, groups, and pages — control the order, hierarchy, and labeling of every page in your docs site."
 ---
 
 Mintlify's navigation is defined in the `navigation` object inside `docs.json`. You can organize pages into groups (for a single-tab site) or into tabs with groups underneath (for multi-section sites like Documentation + API Reference). The order you define here is exactly the order your readers will see in the sidebar.
@@ -95,12 +95,14 @@ Pages and groups render in the **exact order** you list them in `docs.json`. To 
 {
   "group": "Get Started",
   "pages": [
-    "introduction",   // shown first
-    "quickstart",     // shown second
-    "installation"    // shown third
+    "introduction",
+    "quickstart",
+    "installation"
   ]
 }
 ```
+
+Pages render top-to-bottom in the order listed: `introduction` first, `quickstart` second, `installation` third.
 
 ## Nested folders
 
